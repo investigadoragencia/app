@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Chamadas — App AI</title>
+<style>
+:root{--bg:#000;--accent:#e50914;--muted:#9aa3ad}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:#fff;font-family:"Poppins",system-ui,Roboto,Arial;display:flex;flex-direction:column;align-items:center;padding:14px}
+.header{width:100%;max-width:420px;display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.back{color:var(--muted);cursor:pointer}
+.logo{margin:0 auto;width:64px;height:64px;object-fit:contain}
+.container{width:100%;max-width:420px;background:#0f0f10;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+.call{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
+.name{font-weight:700}
+.time{color:var(--muted);font-size:13px}
+.note{color:var(--muted);text-align:center;margin-top:10px;font-size:13px}
+</style>
+</head>
+<body>
+<div class="header"><div class="back" onclick="voltar()">← Voltar</div><img src="logo.png" class="logo" onerror="this.style.display='none'"></div>
+
+<div class="container" id="list"></div>
+<div class="note">Registro de chamadas fictícias — demonstração.</div>
+
+<script>
+function voltar(){ location.href='dashboard.html'; }
+const calls = [
+  {name:'Contato A', dir:'Recebida', time:'Hoje, 10:12'},
+  {name:'Contato B', dir:'Perdida', time:'Ontem, 22:03'},
+  {name:'Contato C', dir:'Realizada', time:'06/10/2025, 08:35'},
+  {name:'Contato D', dir:'Recebida', time:'05/10/2025, 19:20'}
+];
+const list=document.getElementById('list');
+calls.forEach(c=>{ const row=document.createElement('div'); row.className='call'; row.innerHTML=`<div><div class="name">${c.name}</div><div class="time">${c.dir}</div></div><div class="time">${c.time}</div>`; list.appendChild(row); });
+</script>
+</body>
+</html>

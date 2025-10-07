@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Facebook — App AI</title>
+<style>
+:root{--bg:#000;--accent:#e50914;--muted:#9aa3ad}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:#fff;font-family:"Poppins",system-ui,Roboto,Arial;display:flex;flex-direction:column;align-items:center;padding:14px}
+.header{display:flex;align-items:center;gap:8px;width:100%;max-width:420px;margin-bottom:10px}
+.back{color:var(--muted);cursor:pointer}
+.logo{margin:0 auto;width:64px;height:64px;object-fit:contain}
+.card{width:100%;max-width:420px;background:#0f0f10;padding:12px;border-radius:12px;margin-bottom:10px}
+.title{color:var(--accent);font-weight:700;margin-bottom:6px}
+.post{padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);margin-bottom:8px}
+.post p{color:#ddd}
+.small{color:var(--muted);font-size:13px;text-align:center;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="header"><div class="back" onclick="voltar()">← Voltar</div><img src="logo.png" class="logo" onerror="this.style.display='none'"></div>
+
+<div class="card"><div class="title">Feed — Facebook (simulado)</div>
+  <div class="post"><strong>Amigo A</strong><p>Ótimo encontro hoje!</p></div>
+  <div class="post"><strong>Página B</strong><p>Confira nosso artigo novo.</p></div>
+  <div class="post"><strong>Amigo C</strong><p>Que foto linda 😍</p></div>
+</div>
+
+<div class="small">Demonstração — posts fictícios.</div>
+
+<script>function voltar(){ location.href='dashboard.html'; }</script>
+</body>
+</html>

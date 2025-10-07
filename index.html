@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>App AI - Login e Cadastro</title>
+<style>
+  body{
+    background:#000;
+    color:#fff;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    height:100vh;
+    font-family:"Poppins",sans-serif;
+  }
+  .container{
+    background:rgba(20,20,20,0.9);
+    border:1px solid #e50914;
+    border-radius:14px;
+    padding:20px;
+    width:90%;
+    max-width:320px;
+    text-align:center;
+    box-shadow:0 0 25px rgba(255,0,0,0.3);
+  }
+  h2{color:#e50914;margin-bottom:12px;}
+  input{
+    width:100%;
+    margin:6px 0;
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    background:#111;
+    color:#fff;
+    border:1px solid #e50914;
+  }
+  button{
+    width:100%;
+    padding:10px;
+    margin-top:10px;
+    border:none;
+    border-radius:8px;
+    background:#e50914;
+    color:#fff;
+    font-weight:bold;
+    cursor:pointer;
+  }
+  button:hover{background:#ff1e1e;}
+  a{color:#e50914;font-size:14px;display:block;margin-top:10px;text-decoration:none;cursor:pointer;}
+  #registerBox{display:none;}
+</style>
+</head>
+<body>
+
+<!-- Tela de Login -->
+<div class="container" id="loginBox">
+  <h2>Login</h2>
+  <input type="text" id="loginUsuario" placeholder="Usuário">
+  <input type="password" id="loginSenha" placeholder="Senha">
+  <button onclick="entrar()">Entrar</button>
+  <a onclick="mostrarCadastro()">Criar conta</a>
+</div>
+
+<!-- Tela de Cadastro -->
+<div class="container" id="registerBox">
+  <h2>Criar Conta</h2>
+  <input type="text" id="nome" placeholder="Nome completo">
+  <input type="text" id="usuario" placeholder="Usuário">
+  <input type="password" id="senha" placeholder="Senha">
+  <button onclick="registrar()">Cadastrar</button>
+  <a onclick="mostrarLogin()">Já tenho conta</a>
+</div>
+
+<script>
+function mostrarCadastro(){
+  document.getElementById("loginBox").style.display = "none";
+  document.getElementById("registerBox").style.display = "block";
+}
+function mostrarLogin(){
+  document.getElementById("registerBox").style.display = "none";
+  document.getElementById("loginBox").style.display = "block";
+}
+
+function registrar(){
+  const nome = document.getElementById("nome").value.trim();
+  const usuario = document.getElementById("usuario").value.trim();
+  const senha = document.getElementById("senha").value.trim();
+
+  if(!nome || !usuario || !senha){
+    alert("Preencha todos os campos!");
+    return;
+  }
+
+  // verifica se já existe
+  if(localStorage.getItem("user_" + usuario)){
+    alert("Usuário já cadastrado!");
+    return;
+  }
+
+  const dados = {nome, usuario, senha};
+  localStorage.setItem("user_" + usuario, JSON.stringify(dados));
+  alert("Cadastro realizado com sucesso!");
+  mostrarLogin();
+}
+
+function entrar(){
+  const usuario = document.getElementById("loginUsuario").value.trim();
+  const senha = document.getElementById("loginSenha").value.trim();
+
+  const userData = localStorage.getItem("user_" + usuario);
+  if(!userData){
+    alert("Usuário não encontrado!");
+    return;
+  }
+
+  const dados = JSON.parse(userData);
+  if(dados.senha !== senha){
+    alert("Senha incorreta!");
+    return;
+  }
+
+  // login ok
+  localStorage.setItem("logado","sim");
+  localStorage.setItem("usuario_atual",usuario);
+  alert("Bem-vindo(a), " + dados.nome + "!");
+  window.location.href = "dashboard.html";
+}
+</script>
+</body>
+</html>

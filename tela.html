@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Visualização ao Vivo – App AI</title>
+<style>
+  :root {
+    --bg:#000;
+    --accent:#e50914;
+    --text:#fff;
+    --muted:#9aa3ad;
+    font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:16px 10px 60px;
+  }
+  .logo {
+    width:90px;height:90px;margin:10px auto;
+    display:block;object-fit:contain;
+    animation:pulse 2.5s infinite;
+  }
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.05);opacity:1}}
+  h2 {
+    color:var(--accent);
+    margin-bottom:12px;
+    text-align:center;
+    font-size:18px;
+  }
+  .cam-container {
+    width:100%;
+    max-width:420px;
+    height:60vh;
+    border:2px solid var(--accent);
+    border-radius:16px;
+    overflow:hidden;
+    background:#000;
+    box-shadow:0 0 25px rgba(255,0,0,0.15);
+  }
+  .cam-container iframe {
+    width:100%;
+    height:100%;
+    border:none;
+  }
+  .info {
+    margin-top:8px;
+    font-size:13px;
+    color:var(--muted);
+    text-align:center;
+  }
+  button {
+    margin-top:20px;
+    background:var(--accent);
+    color:#fff;
+    font-weight:bold;
+    border:none;
+    border-radius:10px;
+    padding:10px 20px;
+    cursor:pointer;
+    font-size:15px;
+  }
+  button:hover {background:#ff1e1e;}
+</style>
+</head>
+<body>
+
+  <img src="logo.png" alt="Logo" class="logo" />
+  <h2>Visualização ao Vivo – Times Square</h2>
+
+  <div class="cam-container">
+    <iframe 
+      src="https://www.earthcam.com/usa/newyork/timessquare/?cam=tsrobo1"
+      allowfullscreen
+      loading="lazy">
+    </iframe>
+  </div>
+
+  <div class="info">Fonte: EarthCam • Transmissão pública de demonstração</div>
+
+  <button onclick="voltar()">Voltar ao Painel</button>
+
+<script>
+function voltar(){
+  window.location.href="dashboard.html";
+}
+</script>
+
+</body>
+</html>

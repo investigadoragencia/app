@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Microfone — App AI</title>
+<style>
+:root{--bg:#000;--accent:#e50914;--muted:#9aa3ad}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:#fff;font-family:"Poppins",system-ui,Roboto,Arial;display:flex;flex-direction:column;align-items:center;padding:14px}
+.header{display:flex;align-items:center;gap:8px;width:100%;max-width:420px;margin-bottom:10px}
+.back{color:var(--muted);cursor:pointer}
+.logo{margin:0 auto;width:64px;height:64px;object-fit:contain}
+.box{width:100%;max-width:420px;background:#0f0f10;padding:16px;border-radius:12px;text-align:center}
+.level{width:100%;height:12px;background:#111;border-radius:8px;margin-top:12px;overflow:hidden}
+.level > i{display:block;height:100%;width:10%;background:linear-gradient(90deg,#ff6b6b,#e50914);transition:width .25s ease}
+.btn{background:var(--accent);color:#fff;padding:10px;border-radius:10px;border:none;margin-top:12px;cursor:pointer}
+.small{color:var(--muted);margin-top:8px;font-size:13px}
+</style>
+</head>
+<body>
+<div class="header"><div class="back" onclick="voltar()">← Voltar</div><img src="logo.png" class="logo" onerror="this.style.display='none'"></div>
+
+<div class="box">
+  <h3 style="color:var(--accent)">Microfone — Demonstração</h3>
+  <p class="small">Simulação de nível de áudio (demo).</p>
+  <div class="level"><i id="bar"></i></div>
+  <button class="btn" onclick="toggle()">Iniciar/Parar</button>
+  <div class="small">Nenhum áudio é gravado — apenas simulação visual.</div>
+</div>
+
+<script>
+function voltar(){ location.href='dashboard.html'; }
+let on=false, t;
+function toggle(){
+  on = !on;
+  const bar = document.getElementById('bar');
+  if(on){ t=setInterval(()=>{ const w = Math.floor(Math.random()*80)+10; bar.style.width = w + '%'; }, 200); }
+  else { clearInterval(t); bar.style.width='0%'; }
+}
+</script>
+</body>
+</html>

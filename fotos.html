@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Fotos — App AI</title>
+<style>
+:root{--bg:#000;--card:#0f0f10;--accent:#e50914;--muted:#9aa3ad}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:#fff;font-family:"Poppins",system-ui,Roboto,Arial;display:flex;flex-direction:column;align-items:center;padding:14px}
+.header{width:100%;max-width:420px;display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.back{color:var(--muted);cursor:pointer}
+.logo{margin:0 auto;width:64px;height:64px;object-fit:contain}
+.grid{width:100%;max-width:420px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.thumb{width:100%;padding-top:100%;position:relative;border-radius:8px;overflow:hidden;background:#111}
+.thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.note{color:var(--muted);text-align:center;margin-top:10px;font-size:13px}
+</style>
+</head>
+<body>
+<div class="header"><div class="back" onclick="voltar()">← Voltar</div><img src="logo.png" class="logo" onerror="this.style.display='none'"></div>
+
+<div class="grid" id="grid"></div>
+<div class="note">Galeria demonstrativa — imagens fictícias.</div>
+
+<script>
+function voltar(){ location.href='dashboard.html'; }
+const grid=document.getElementById('grid');
+const placeholders = [
+  "https://picsum.photos/seed/p1/400/400",
+  "https://picsum.photos/seed/p2/400/400",
+  "https://picsum.photos/seed/p3/400/400",
+  "https://picsum.photos/seed/p4/400/400",
+  "https://picsum.photos/seed/p5/400/400",
+  "https://picsum.photos/seed/p6/400/400",
+  "https://picsum.photos/seed/p7/400/400",
+  "https://picsum.photos/seed/p8/400/400",
+  "https://picsum.photos/seed/p9/400/400"
+];
+for(const src of placeholders){
+  const d=document.createElement('div'); d.className='thumb';
+  const img=document.createElement('img'); img.src=src; d.appendChild(img); grid.appendChild(d);
+  d.addEventListener('click', ()=> { window.open(src, '_blank'); });
+}
+</script>
+</body>
+</html>

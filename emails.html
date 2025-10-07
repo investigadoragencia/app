@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>E-mails — App AI</title>
+<style>
+:root{--bg:#000;--accent:#e50914;--muted:#9aa3ad}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:#fff;font-family:"Poppins",system-ui,Roboto,Arial;display:flex;flex-direction:column;align-items:center;padding:14px}
+.header{display:flex;align-items:center;gap:8px;width:100%;max-width:420px;margin-bottom:10px}
+.back{color:var(--muted);cursor:pointer}
+.logo{margin:0 auto;width:64px;height:64px;object-fit:contain}
+.container{width:100%;max-width:420px;background:#0f0f10;padding:12px;border-radius:12px}
+.email{padding:10px;border-bottom:1px solid rgba(255,255,255,0.03)}
+.subject{font-weight:700}
+.preview{color:var(--muted);font-size:13px}
+.btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;margin-top:12px}
+</style>
+</head>
+<body>
+<div class="header"><div class="back" onclick="voltar()">← Voltar</div><img src="logo.png" class="logo" onerror="this.style.display='none'"></div>
+
+<div class="container" id="inbox"></div>
+<button class="btn" onclick="voltar()">Voltar ao Painel</button>
+
+<script>
+function voltar(){ location.href='dashboard.html'; }
+const inbox = [
+  {from:'serviço@site.com', subject:'Bem-vindo!', preview:'Obrigado por usar nosso serviço.'},
+  {from:'contato@empresa.com', subject:'Agendamento', preview:'Confirmamos seu horário.'},
+  {from:'newsletter@news.com', subject:'Resumo semanal', preview:'Principais notícias da semana.'}
+];
+const el=document.getElementById('inbox');
+inbox.forEach(m=>{ const d=document.createElement('div'); d.className='email'; d.innerHTML=`<div class="subject">${m.subject}</div><div class="preview">${m.preview}</div><div style="color:var(--muted);font-size:12px">${m.from}</div>`; el.appendChild(d); });
+</script>
+</body>
+</html>

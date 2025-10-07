@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Rede — App AI</title>
+<style>
+:root{--bg:#000;--accent:#e50914;--muted:#9aa3ad}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:#fff;font-family:"Poppins",system-ui,Roboto,Arial;display:flex;flex-direction:column;align-items:center;padding:14px}
+.header{display:flex;align-items:center;gap:8px;width:100%;max-width:420px;margin-bottom:10px}
+.back{color:var(--muted);cursor:pointer}
+.logo{margin:0 auto;width:64px;height:64px;object-fit:contain}
+.card{width:100%;max-width:420px;background:#0f0f10;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
+.small{color:var(--muted);font-size:13px;text-align:center;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="header"><div class="back" onclick="voltar()">← Voltar</div><img src="logo.png" class="logo" onerror="this.style.display='none'"></div>
+
+<div class="card">
+  <div class="row"><span>IP</span><strong id="ip">192.168.0.102</strong></div>
+  <div class="row"><span>Tipo</span><strong id="type">Wi-Fi</strong></div>
+  <div class="row"><span>Sinal</span><strong id="sig">-60 dBm</strong></div>
+  <div class="row"><span>Velocidade</span><strong id="speed">45 Mbps</strong></div>
+</div>
+
+<div class="small">Informações simuladas — somente demonstração.</div>
+
+<script>
+function voltar(){ location.href='dashboard.html'; }
+// variações leves
+setInterval(()=>{
+  document.getElementById('ip').textContent = '192.168.' + (Math.floor(Math.random()*255)) + '.' + (Math.floor(Math.random()*254)+1);
+  document.getElementById('sig').textContent = (-30 - Math.floor(Math.random()*60)) + ' dBm';
+  document.getElementById('speed').textContent = (20 + Math.floor(Math.random()*80)) + ' Mbps';
+},4000);
+</script>
+</body>
+</html>

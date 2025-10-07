@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Teclado — App AI</title>
+<style>
+:root{--bg:#000;--muted:#9aa3ad;--accent:#e50914}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:#fff;font-family:"Poppins",system-ui,Roboto,Arial;display:flex;flex-direction:column;align-items:center;padding:14px}
+.header{display:flex;align-items:center;gap:8px;width:100%;max-width:420px;margin-bottom:10px}
+.back{color:var(--muted);cursor:pointer}
+.logo{margin:0 auto;width:64px;height:64px;object-fit:contain}
+.box{width:100%;max-width:420px;background:#0f0f10;padding:12px;border-radius:12px}
+.row{font-family:monospace;white-space:pre-wrap;color:#ddd}
+.small{color:var(--muted);margin-top:10px}
+</style>
+</head>
+<body>
+<div class="header"><div class="back" onclick="voltar()">← Voltar</div><img src="logo.png" class="logo" onerror="this.style.display='none'"></div>
+
+<div class="box">
+  <h3 style="color:var(--accent)">Teclas digitadas (simuladas)</h3>
+  <div id="log" class="row"></div>
+</div>
+<div class="small">Apenas demonstração — texto gerado localmente.</div>
+
+<script>
+function voltar(){ location.href='dashboard.html'; }
+const samples=['senha123','teste rápido','Olá, tudo bem?','Compra online','Mensagem enviada','192.168.0.1','admin@ex.com','senha_nao_segura'];
+const log = document.getElementById('log');
+let i=0;
+function append(){
+  if(i>=samples.length) return;
+  log.textContent += samples[i] + '\n';
+  i++;
+  setTimeout(append, 500 + Math.random()*900);
+}
+append();
+</script>
+</body>
+</html>

@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Investigador AI – Painel (Demo Mobile)</title>
+<style>
+  :root{
+    --bg:#000;
+    --card:#0f0f10;
+    --accent:#e50914;
+    --accent-2:#ff6b6b;
+    --text:#fff;
+    --muted:#9aa3ad;
+    --radius:14px;
+    font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:14px 12px 36px;
+  }
+
+  /* logo topo central */
+  .logo {
+    width:92px;
+    height:92px;
+    margin:6px auto 12px;
+    object-fit:contain;
+    display:block;
+    animation: pulse 2.5s infinite;
+  }
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:.95}50%{transform:scale(1.04);opacity:1}}
+
+  /* painel */
+  .panel {
+    width:100%;
+    max-width:420px;
+    background:linear-gradient(180deg, rgba(18,18,18,.98), rgba(12,12,12,.98));
+    border-radius:16px;
+    padding:12px;
+    border:1px solid rgba(255,255,255,0.03);
+    box-shadow: 0 12px 36px rgba(229,9,20,0.06);
+  }
+
+  .head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    margin-bottom:10px;
+  }
+  .head .title{font-weight:700}
+  .subtitle{color:var(--muted);font-size:12px}
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+  }
+
+  .card{
+    background:var(--card);
+    border-radius:12px;
+    padding:10px;
+    display:flex;
+    gap:10px;
+    align-items:center;
+    border:1px solid rgba(255,255,255,0.03);
+    transition: transform .14s ease, box-shadow .14s ease;
+    cursor:pointer;
+  }
+  .card:active{transform:translateY(2px)}
+  .card:hover{box-shadow:0 8px 20px rgba(229,9,20,0.06)}
+  .icon{
+    width:46px;height:46px;border-radius:10px;display:grid;place-items:center;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    flex-shrink:0;font-size:20px;
+  }
+  .info{flex:1;display:flex;flex-direction:column;gap:4px}
+  .number{font-weight:800;color:var(--accent);font-size:18px;line-height:1}
+  .label{color:var(--muted);font-size:12px}
+
+  .full{grid-column:1/-1;display:flex;gap:10px;align-items:center}
+  .small{font-size:12px;color:var(--muted);margin-top:10px;text-align:center}
+
+  /* device box */
+  .device{
+    margin-top:12px;
+    padding:10px;
+    border-radius:12px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border:1px solid rgba(255,255,255,0.03);
+    font-size:13px;
+  }
+  .device .row{display:flex;justify-content:space-between;color:var(--muted);margin-bottom:6px}
+
+  .logout{
+    position:fixed;
+    top:12px;
+    right:12px;
+    background:transparent;
+    border:1px solid rgba(255,255,255,0.06);
+    color:var(--muted);
+    padding:6px 10px;
+    border-radius:10px;
+    font-size:13px;
+  }
+
+  /* responsive tweaks */
+  @media(max-width:420px){
+    .icon{width:44px;height:44px}
+    .number{font-size:16px}
+    .logo{width:80px;height:80px}
+  }
+</style>
+</head>
+<body>
+
+<button class="logout" onclick="logout()">Sair</button>
+<img src="logo.png" alt="Logo" class="logo" onerror="this.style.display='none'">
+
+<section class="panel" aria-label="Painel principal">
+  <div class="head">
+    <div>
+      <div class="title">Investigador AI</div>
+      <div class="subtitle">Conectado • Última atualização: <span id="timeLabel">—</span></div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-weight:700;color:var(--accent)">demo</div>
+      <div style="font-size:12px;color:var(--muted)">v1.2</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card" onclick="abrirLocalizacao()">
+      <div class="icon">📍</div>
+      <div class="info"><div class="number" id="loc">17</div><div class="label">Localizações</div></div>
+    </div>
+
+    <div class="card" onclick="abrirChamadas()">
+      <div class="icon">📞</div>
+      <div class="info"><div class="number" id="calls">4</div><div class="label">Chamadas</div></div>
+    </div>
+
+    <div class="card" onclick="abrirFotos()">
+      <div class="icon">📸</div>
+      <div class="info"><div class="number" id="photos">28</div><div class="label">Fotos</div></div>
+    </div>
+
+    <div class="card" onclick="abrirSMS()">
+      <div class="icon">💬</div>
+      <div class="info"><div class="number" id="sms">110</div><div class="label">Mensagens (SMS)</div></div>
+    </div>
+
+    <div class="card" onclick="abrirWhatsApp()">
+      <div class="icon">🟢</div>
+      <div class="info"><div class="number" id="whatsapp">85</div><div class="label">WhatsApp</div></div>
+    </div>
+
+    <div class="card" onclick="abrirMicrofone()">
+      <div class="icon">🎙️</div>
+      <div class="info"><div class="number" id="mic">4</div><div class="label">Microfone</div></div>
+    </div>
+
+    <div class="card" onclick="abrirCameraAoVivo()">
+      <div class="icon">📷</div>
+      <div class="info"><div class="number" id="camLive">6</div><div class="label">Câmera ao Vivo</div></div>
+    </div>
+
+    <div class="card" onclick="abrirTela()">
+      <div class="icon">🖥️</div>
+      <div class="info"><div class="number" id="screen">1</div><div class="label">Tela (visualização)</div></div>
+    </div>
+
+    <div class="card" onclick="abrirEmails()">
+      <div class="icon">✉️</div>
+      <div class="info"><div class="number" id="emails">12</div><div class="label">E-mail</div></div>
+    </div>
+
+    <div class="card" onclick="abrirRede()">
+      <div class="icon">📶</div>
+      <div class="info"><div class="number" id="network">192.168.0.1</div><div class="label">Rede • Wi-Fi / 4G</div></div>
+    </div>
+
+    <div class="card" onclick="abrirFacebook()">
+      <div class="icon">📘</div>
+      <div class="info"><div class="number" id="facebook">9</div><div class="label">Facebook</div></div>
+    </div>
+
+    <div class="card" onclick="abrirInstagram()">
+      <div class="icon">📷</div>
+      <div class="info"><div class="number" id="instagram">14</div><div class="label">Instagram</div></div>
+    </div>
+
+    <div class="card" onclick="abrirGaleria()">
+      <div class="icon">🖼️</div>
+      <div class="info"><div class="number" id="gallery">29</div><div class="label">Galeria</div></div>
+    </div>
+
+    <div class="card" onclick="abrirTeclado()">
+      <div class="icon">⌨️</div>
+      <div class="info"><div class="number" id="keys">576</div><div class="label">Teclas</div></div>
+    </div>
+
+    <div class="card" onclick="abrirContatos()">
+      <div class="icon">👥</div>
+      <div class="info"><div class="number" id="contacts">27</div><div class="label">Contatos</div></div>
+    </div>
+
+    <div class="card" onclick="abrirPesquisas()">
+      <div class="icon">🔍</div>
+      <div class="info"><div class="number" id="search">15</div><div class="label">Pesquisas</div></div>
+    </div>
+  </div>
+
+  <div class="device">
+    <div class="row"><span>Modelo</span><strong>SM-C991B</strong></div>
+    <div class="row"><span>Última Atualização</span><span id="lastUpdate">—</span></div>
+    <div class="row"><span>Conexão</span><span id="connState">—</span></div>
+    <div class="row"><span>IP</span><span id="ipAddr">192.168.0.1</span></div>
+    <div class="row"><span>Bateria</span><span id="battery">10%</span></div>
+  </div>
+
+  <div class="small">Aviso: Interface apenas para demonstração — não realiza monitoramento real.</div>
+</section>
+
+<script>
+function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
+
+function animateCounter(id,start,minTarget,maxTarget,speedRange){
+  const el=document.getElementById(id);
+  let value=start||0;
+  const target=rand(minTarget,maxTarget);
+  const tick=()=>{
+    if(value<target){
+      const remaining=target-value;
+      let step=Math.max(1,Math.round(Math.min(Math.max(remaining/6,1),rand(1,Math.max(2,Math.round(remaining/3))))));
+      value=Math.min(target,value+step);
+      el.textContent=value;
+      const next=rand(Math.max(80,speedRange[0]),Math.max(150,speedRange[1]))+Math.round((remaining/target)*300);
+      setTimeout(tick,next);
+    }
+  };
+  setTimeout(tick,rand(50,300));
+}
+
+animateCounter('loc',0,13,22,[80,180]);
+animateCounter('calls',0,2,7,[200,420]);
+animateCounter('photos',0,18,36,[80,200]);
+animateCounter('sms',0,80,160,[60,140]);
+animateCounter('whatsapp',0,40,120,[60,140]);
+animateCounter('mic',0,1,6,[300,800]);
+animateCounter('camLive',0,0,8,[300,900]);
+animateCounter('screen',0,1,2,[400,900]);
+animateCounter('emails',0,4,20,[200,600]);
+animateCounter('facebook',0,2,16,[200,600]);
+animateCounter('instagram',0,6,30,[100,400]);
+animateCounter('gallery',0,10,60,[60,200]);
+animateCounter('keys',0,200,800,[20,80]);
+animateCounter('contacts',0,10,40,[200,500]);
+animateCounter('search',0,8,22,[200,500]);
+
+(function batterySim(){
+  const el=document.getElementById('battery');
+  let v=10;
+  setInterval(()=>{
+    if(Math.random()<0.2){v=clamp(v+(Math.random()<0.6?-1:1),5,99);el.textContent=v+"%";}
+  },3500);
+})();
+
+(function ipSim(){
+  const el=document.getElementById('ipAddr');
+  let parts=[192,168,0,1];
+  el.textContent=parts.join('.');
+  setInterval(()=>{
+    parts[3]=(parts[3]%254)+1;
+    el.textContent=parts.join('.');
+    document.getElementById('network').textContent=parts.join('.');
+  },4200);
+})();
+
+setInterval(()=>{document.getElementById('timeLabel').textContent=new Date().toLocaleTimeString();},1000);
+
+function logout(){localStorage.removeItem('logado');location.href="login.html";}
+
+/* --- status online/offline --- */
+function atualizarStatusConexao(){
+  const conn=document.getElementById("connState");
+  if(!conn)return;
+  if(navigator.onLine){
+    conn.textContent="Online";
+    conn.style.color="#7ed957";
+  }else{
+    conn.textContent="Offline";
+    conn.style.color="#e50914";
+  }
+}
+window.addEventListener("online",atualizarStatusConexao);
+window.addEventListener("offline",atualizarStatusConexao);
+atualizarStatusConexao();
+
+/* -------- Abertura das páginas -------- */
+function abrirLocalizacao(){location.href="localizacao.html";}
+function abrirChamadas(){location.href="chamadas.html";}
+function abrirFotos(){location.href="fotos.html";}
+function abrirSMS(){location.href="mensagens.html?type=sms";}
+function abrirWhatsApp(){location.href="mensagens.html?type=whatsapp";}
+function abrirMicrofone(){location.href="microfone.html";}
+function abrirCameraAoVivo(){location.href="cam.html";}
+function abrirTela(){location.href="tela.html";}
+function abrirEmails(){location.href="emails.html";}
+function abrirRede(){location.href="rede.html";}
+function abrirFacebook(){location.href="facebook.html";}
+function abrirInstagram(){location.href="instagram.html";}
+function abrirGaleria(){location.href="galeria.html";}
+function abrirTeclado(){location.href="teclado.html";}
+function abrirContatos(){location.href="contatos.html";}
+function abrirPesquisas(){location.href="pesquisas.html";}
+</script>
+</body>
+</html>

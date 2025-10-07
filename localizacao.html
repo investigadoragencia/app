@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Localização — App AI (Demo)</title>
+<style>
+:root{--bg:#000;--accent:#e50914;--muted:#9aa3ad;--card:#0f0f10;font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Arial;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:16px;}
+.header{width:100%;max-width:420px;display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.back{color:var(--muted);cursor:pointer;font-size:14px}
+.logo{margin:0 auto;width:72px;height:72px;object-fit:contain}
+.card{width:100%;max-width:420px;border-radius:14px;border:2px solid var(--accent);overflow:hidden;box-shadow:0 10px 30px rgba(229,9,20,0.12);background:#0b0b0d}
+.map{width:100%;height:60vh;min-height:300px;position:relative;background:linear-gradient(180deg,#080808,#0f0f10)}
+.pin{position:absolute;left:50%;top:50%;transform:translate(-50%,-100%);width:36px;height:48px;z-index:20;animation:bounce 1.6s infinite}
+@keyframes bounce{0%,100%{transform:translate(-50%,-100%) translateY(0)}50%{transform:translate(-50%,-100%) translateY(-8px)}}
+.pin-label{position:absolute;left:50%;top:calc(50% + 10%);transform:translateX(-50%);background:rgba(0,0,0,0.6);padding:6px 10px;border-radius:10px;color:var(--muted);font-size:13px}
+.controls{display:flex;gap:8px;justify-content:center;padding:12px}
+.btn{background:var(--accent);color:#fff;padding:10px 14px;border-radius:10px;border:none;cursor:pointer}
+.note{color:var(--muted);font-size:13px;text-align:center;margin-top:10px}
+svg.map-svg{display:block;width:100%;height:100%}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="back" onclick="voltar()">← Voltar</div>
+  <img src="logo.png" alt="Logo" class="logo" onerror="this.style.display='none'">
+</div>
+
+<div class="card" role="region" aria-label="Mapa demo">
+  <div class="map" id="mapa">
+    <!-- SVG mapa offline (visual apenas) -->
+    <svg class="map-svg" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden>
+      <rect width="100%" height="100%" fill="#0b0b0d"/>
+      <path d="M80 120 C180 80, 300 100, 360 150 C420 200, 520 180, 650 240 L650 420 L120 420 Z" fill="#0e2a3a" opacity="0.95"/>
+      <path d="M20 460 L140 360 L220 420 L300 360 L420 460 L20 460" fill="#163826" opacity="0.9"/>
+      <g fill="#1b1b1c" stroke="#202225" stroke-width="2">
+        <rect x="60" y="70" width="70" height="90" rx="6"/>
+        <rect x="150" y="50" width="86" height="120" rx="6"/>
+        <rect x="260" y="90" width="60" height="80" rx="6"/>
+        <rect x="340" y="140" width="110" height="100" rx="6"/>
+        <rect x="480" y="120" width="86" height="140" rx="6"/>
+        <rect x="600" y="200" width="86" height="90" rx="6"/>
+      </g>
+      <g stroke="#202225" stroke-width="12" stroke-linecap="round" opacity="0.9">
+        <path d="M20 180 L760 180"/>
+        <path d="M120 40 L120 560"/>
+        <path d="M400 20 L400 560"/>
+        <path d="M20 320 L760 320"/>
+      </g>
+      <g stroke="#2a2a2a" stroke-width="4" stroke-dasharray="18 12" opacity="0.7">
+        <path d="M20 180 L760 180"/>
+        <path d="M120 40 L120 560"/>
+        <path d="M400 20 L400 560"/>
+        <path d="M20 320 L760 320"/>
+      </g>
+    </svg>
+
+    <!-- Pin -->
+    <svg class="pin" viewBox="0 0 24 36" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <defs><linearGradient id="g1" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#ff6b6b"/><stop offset="1" stop-color="#e50914"/></linearGradient></defs>
+      <path d="M12 0 C7 0 4 4 4 8 C4 14 12 26 12 26 C12 26 20 14 20 8 C20 4 17 0 12 0 Z" fill="url(#g1)"/>
+      <circle cx="12" cy="8" r="3.6" fill="#fff"/>
+    </svg>
+
+    <div class="pin-label" id="pinLabel">Posição simulada</div>
+  </div>
+</div>
+
+<div class="controls">
+  <button class="btn" onclick="randomMove()">Simular movimento</button>
+  <button class="btn" onclick="voltar()">Voltar ao Painel</button>
+</div>
+
+<div class="note">Mapa ilustrativo — demonstração visual apenas.</div>
+
+<script>
+function voltar(){ location.href='dashboard.html'; }
+
+// lê query ?x=..&y=..&label=..
+function getQuery(){
+  const q={}; location.search.replace(/^\?/,'').split('&').forEach(p=>{ if(!p) return; const [k,v]=p.split('='); q[decodeURIComponent(k)]=v?decodeURIComponent(v):'';});
+  return q;
+}
+const mapaEl = document.getElementById('mapa');
+const pin = document.querySelector('.pin');
+const pinLabel = document.getElementById('pinLabel');
+let xPct=50,yPct=50;
+
+function movePin(x,y,label){
+  xPct = Math.max(5, Math.min(95, Number(x)));
+  yPct = Math.max(8, Math.min(92, Number(y)));
+  if(isNaN(xPct)) xPct=50;
+  if(isNaN(yPct)) yPct=50;
+  pin.style.left = xPct + '%';
+  pin.style.top = yPct + '%';
+  pinLabel.style.left = xPct + '%';
+  pinLabel.style.top = (yPct + 8) + '%';
+  pinLabel.textContent = label || 'Posição simulada';
+}
+
+function randomMove(){
+  const steps = 6; const path=[];
+  for(let i=0;i<steps;i++){ path.push({x:20+Math.random()*60,y:25+Math.random()*55}); }
+  let i=0; const labels=['Casa','Trabalho','Rua','Café','Parque','Supermercado'];
+  function step(){ if(i>=path.length){ pinLabel.textContent='Parada final'; return; } const p=path[i]; movePin(p.x,p.y, labels[i%labels.length]); i++; setTimeout(step,700+Math.random()*900); }
+  step();
+}
+
+const q = getQuery();
+if(q.x && q.y) movePin(q.x,q.y,q.label); else movePin(50,50,'Posição simulada');
+window.addEventListener('resize', ()=> movePin(xPct,yPct));
+</script>
+</body>
+</html>
