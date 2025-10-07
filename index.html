@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>App AI - Login e Cadastro</title>
+<title>Investigador AI - Login e Cadastro</title>
 <style>
   body{
     background:#000;
@@ -14,7 +14,22 @@
     justify-content:center;
     height:100vh;
     font-family:"Poppins",sans-serif;
+    overflow:hidden;
   }
+
+  /* Logo */
+  .logo{
+    width:100px;
+    height:100px;
+    object-fit:contain;
+    margin-bottom:18px;
+    animation:pulse 2.5s infinite;
+  }
+  @keyframes pulse{
+    0%,100%{transform:scale(1);opacity:.9}
+    50%{transform:scale(1.05);opacity:1}
+  }
+
   .container{
     background:rgba(20,20,20,0.9);
     border:1px solid #e50914;
@@ -25,7 +40,10 @@
     text-align:center;
     box-shadow:0 0 25px rgba(255,0,0,0.3);
   }
-  h2{color:#e50914;margin-bottom:12px;}
+  h2{
+    color:#e50914;
+    margin-bottom:12px;
+  }
   input{
     width:100%;
     margin:6px 0;
@@ -48,11 +66,27 @@
     cursor:pointer;
   }
   button:hover{background:#ff1e1e;}
-  a{color:#e50914;font-size:14px;display:block;margin-top:10px;text-decoration:none;cursor:pointer;}
+  a{
+    color:#e50914;
+    font-size:14px;
+    display:block;
+    margin-top:10px;
+    text-decoration:none;
+    cursor:pointer;
+  }
   #registerBox{display:none;}
+
+  /* Responsivo */
+  @media(max-width:400px){
+    .logo{width:80px;height:80px;margin-bottom:12px;}
+    .container{padding:16px;}
+  }
 </style>
 </head>
 <body>
+
+<!-- Logo topo -->
+<img src="logo.png" alt="Logo Investigador AI" class="logo" onerror="this.style.display='none'">
 
 <!-- Tela de Login -->
 <div class="container" id="loginBox">
@@ -93,7 +127,6 @@ function registrar(){
     return;
   }
 
-  // verifica se já existe
   if(localStorage.getItem("user_" + usuario)){
     alert("Usuário já cadastrado!");
     return;
@@ -121,7 +154,6 @@ function entrar(){
     return;
   }
 
-  // login ok
   localStorage.setItem("logado","sim");
   localStorage.setItem("usuario_atual",usuario);
   alert("Bem-vindo(a), " + dados.nome + "!");
