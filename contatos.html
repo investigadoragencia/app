@@ -9,6 +9,7 @@
   --bg:#000;
   --accent:#e50914;
   --muted:#9aa3ad;
+  --card:#0f0f10;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{
@@ -42,7 +43,7 @@ body{
 .list{
   width:100%;
   max-width:420px;
-  background:#0f0f10;
+  background:var(--card);
   padding:12px;
   border-radius:12px;
   border:1px solid rgba(255,255,255,0.04);
@@ -50,13 +51,21 @@ body{
 }
 .item{
   display:flex;
-  justify-content:space-between;
   align-items:center;
+  justify-content:space-between;
   padding:10px 0;
   border-bottom:1px solid rgba(255,255,255,0.05);
 }
 .item:last-child{border-bottom:none;}
-.name{font-weight:700;}
+.left{display:flex;align-items:center;gap:10px;}
+.avatar{
+  width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:700;font-size:16px;
+  background:linear-gradient(135deg, var(--accent), #ff3b3b);
+  flex-shrink:0;
+}
+.name{font-weight:700;font-size:15px;}
 .number{color:var(--muted);font-size:14px;}
 .small{
   color:var(--muted);
@@ -86,14 +95,28 @@ const nomes = [
   'Patrícia Duarte','Rafael Moreira','Sabrina Lopes','Tiago Carvalho','Viviane Freitas'
 ];
 
+// paleta de cores para os avatares
+const cores = [
+  '#e50914','#ff3b3b','#ff6b6b','#ff9800','#ffc107','#4caf50','#2196f3','#9c27b0','#f44336','#00bcd4'
+];
+
 const list = document.getElementById('list');
 
-nomes.forEach(nome=>{
+nomes.forEach((nome,i)=>{
   const ddd = Math.random() > 0.5 ? 11 : 21;
   const numero = `${ddd} 9${Math.floor(1000 + Math.random()*8999)}-${Math.floor(1000 + Math.random()*8999)}`;
+  const inicial = nome.charAt(0).toUpperCase();
+  const cor = cores[i % cores.length];
+
   const item = document.createElement('div');
   item.className = 'item';
-  item.innerHTML = `<div class="name">${nome}</div><div class="number">+55 ${numero}</div>`;
+  item.innerHTML = `
+    <div class="left">
+      <div class="avatar" style="background:${cor}">${inicial}</div>
+      <div class="name">${nome}</div>
+    </div>
+    <div class="number">+55 ${numero}</div>
+  `;
   list.appendChild(item);
 });
 </script>
