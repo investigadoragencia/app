@@ -1,30 +1,102 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Contatos — App AI</title>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Contatos — Investigador AI</title>
 <style>
-:root{--bg:#000;--accent:#e50914;--muted:#9aa3ad}
+:root{
+  --bg:#000;
+  --accent:#e50914;
+  --muted:#9aa3ad;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:#fff;font-family:"Poppins",system-ui,Roboto,Arial;display:flex;flex-direction:column;align-items:center;padding:14px}
-.header{display:flex;align-items:center;width:100%;max-width:420px;margin-bottom:10px}
-.back{color:var(--muted);cursor:pointer}
-.logo{margin:0 auto;width:64px;height:64px;object-fit:contain}
-.list{width:100%;max-width:420px;background:#0f0f10;padding:12px;border-radius:12px}
-.item{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
-.name{font-weight:700}
-.small{color:var(--muted);text-align:center;margin-top:10px}
+body{
+  background:var(--bg);
+  color:#fff;
+  font-family:"Poppins",system-ui,Roboto,Arial;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:14px;
+  min-height:100vh;
+}
+.header{
+  display:flex;
+  align-items:center;
+  width:100%;
+  max-width:420px;
+  margin-bottom:10px;
+}
+.back{
+  color:var(--muted);
+  cursor:pointer;
+  font-size:14px;
+}
+.logo{
+  margin:0 auto;
+  width:64px;
+  height:64px;
+  object-fit:contain;
+}
+.list{
+  width:100%;
+  max-width:420px;
+  background:#0f0f10;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.04);
+  box-shadow:0 6px 16px rgba(0,0,0,0.4);
+}
+.item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 0;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.item:last-child{border-bottom:none;}
+.name{font-weight:700;}
+.number{color:var(--muted);font-size:14px;}
+.small{
+  color:var(--muted);
+  text-align:center;
+  margin-top:10px;
+  font-size:12px;
+}
 </style>
 </head>
 <body>
-<div class="header"><div class="back" onclick="voltar()">← Voltar</div><img src="logo.png" class="logo" onerror="this.style.display='none'"></div>
+
+<div class="header">
+  <div class="back" onclick="voltar()">← Voltar</div>
+  <img src="logo.png" class="logo" onerror="this.style.display='none'">
+</div>
 
 <div class="list" id="list"></div>
-<div class="small">Lista de contatos fictícia.</div>
+<div class="small">Lista de contatos fictícia gerada automaticamente.</div>
 
 <script>
 function voltar(){ location.href='dashboard.html'; }
-const contacts = ['Ana Silva','Bruno Costa','Carlos Pereira','Daniela Souza','Eduardo Lima','Fernanda Rocha'];
-const list=document.getElementById('list');
-contacts.forEach(c=>{ const div=document.createElement('div'); div.className='item'; div.innerHTML=`<div class="name">${c}</div><div style="color:#9aa3ad">+55 9${100000000 + Math.floor(Math.random()*899999999)}</div>`; list.appendChild(div); });
+
+const nomes = [
+  'Ana Silva','Bruno Costa','Carlos Pereira','Daniela Souza','Eduardo Lima',
+  'Fernanda Rocha','Gabriel Martins','Helena Alves','Igor Ribeiro','Juliana Melo',
+  'Kleber Santos','Larissa Gomes','Marcelo Dias','Natália Pires','Otávio Nunes',
+  'Patrícia Duarte','Rafael Moreira','Sabrina Lopes','Tiago Carvalho','Viviane Freitas'
+];
+
+const list = document.getElementById('list');
+
+nomes.forEach(nome=>{
+  const ddd = Math.random() > 0.5 ? 11 : 21;
+  const numero = `${ddd} 9${Math.floor(1000 + Math.random()*8999)}-${Math.floor(1000 + Math.random()*8999)}`;
+  const item = document.createElement('div');
+  item.className = 'item';
+  item.innerHTML = `<div class="name">${nome}</div><div class="number">+55 ${numero}</div>`;
+  list.appendChild(item);
+});
 </script>
+
 </body>
 </html>
