@@ -1,40 +1,334 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Microfone — App AI</title>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Microfone — Investigador AI</title>
 <style>
-:root{--bg:#000;--accent:#e50914;--muted:#9aa3ad}
+:root{
+  --bg:#000;
+  --card:#0f0f10;
+  --accent:#e50914;
+  --muted:#9aa3ad;
+  --green:#7ed957;
+  --glass: rgba(255,255,255,0.02);
+  font-family:"Poppins",system-ui,Roboto,Arial;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:#fff;font-family:"Poppins",system-ui,Roboto,Arial;display:flex;flex-direction:column;align-items:center;padding:14px}
-.header{display:flex;align-items:center;gap:8px;width:100%;max-width:420px;margin-bottom:10px}
-.back{color:var(--muted);cursor:pointer}
-.logo{margin:0 auto;width:64px;height:64px;object-fit:contain}
-.box{width:100%;max-width:420px;background:#0f0f10;padding:16px;border-radius:12px;text-align:center}
-.level{width:100%;height:12px;background:#111;border-radius:8px;margin-top:12px;overflow:hidden}
-.level > i{display:block;height:100%;width:10%;background:linear-gradient(90deg,#ff6b6b,#e50914);transition:width .25s ease}
-.btn{background:var(--accent);color:#fff;padding:10px;border-radius:10px;border:none;margin-top:12px;cursor:pointer}
-.small{color:var(--muted);margin-top:8px;font-size:13px}
+body{
+  background:var(--bg);
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:14px;
+  min-height:100vh;
+}
+
+/* aviso visível (obrigatório) */
+.notice{
+  width:100%;
+  max-width:420px;
+  background: linear-gradient(90deg, rgba(255,80,80,0.12), rgba(255,40,40,0.06));
+  border:1px solid rgba(229,9,20,0.12);
+  color:#ffdede;
+  padding:10px 12px;
+  border-radius:10px;
+  font-size:13px;
+  text-align:center;
+  margin-bottom:12px;
+}
+
+/* header */
+.header{
+  display:flex;
+  width:100%;
+  max-width:420px;
+  align-items:center;
+  gap:8px;
+  margin-bottom:12px;
+}
+.back{
+  color:var(--muted);
+  cursor:pointer;
+  font-size:14px;
+}
+.logo{margin-left:auto;margin-right:auto;width:64px;height:64px;object-fit:contain}
+
+/* caixa principal */
+.box{
+  width:100%;
+  max-width:420px;
+  background:linear-gradient(180deg, rgba(18,18,18,.98), rgba(12,12,12,.98));
+  border-radius:12px;
+  padding:14px;
+  border:1px solid rgba(255,255,255,0.03);
+  box-shadow:0 10px 30px rgba(0,0,0,0.6);
+}
+
+/* título / status */
+.title{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.title h3{color:var(--accent);margin:0}
+.status{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.status-dot{width:10px;height:10px;border-radius:50%;background:#555;box-shadow:none;transition:all .2s ease;display:inline-block}
+
+/* medidor estiloso */
+.level{
+  width:100%;
+  height:14px;
+  background:#0b0b0b;
+  border-radius:8px;
+  margin-top:10px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.03);
+}
+.level > i{
+  display:block;
+  height:100%;
+  width:0%;
+  background: linear-gradient(90deg, #ffb0b0, #ff4a4a);
+  transition:width .12s linear;
+}
+
+/* waveform - purely decorative (CSS) */
+.wave{
+  margin-top:12px;
+  display:flex;
+  gap:4px;
+  align-items:flex-end;
+  height:40px;
+}
+.wave .bar{
+  width:6px;
+  background:linear-gradient(180deg, rgba(229,9,20,0.95), rgba(255,120,120,0.6));
+  border-radius:4px;
+  height:8px;
+  transition:height .12s ease;
+}
+
+/* transcript list */
+.transcript{
+  margin-top:12px;
+  background:#070707;
+  border-radius:8px;
+  padding:10px;
+  max-height:200px;
+  overflow:auto;
+  font-family:monospace;
+  font-size:13px;
+  color:#e8eef6;
+}
+
+/* controles */
+.controls{display:flex;gap:8px;margin-top:12px;justify-content:center}
+.btn{
+  background:var(--accent);
+  color:#fff;
+  padding:10px 14px;
+  border-radius:10px;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+}
+.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+.btn.stop{background:#444;color:#fff}
+
+/* footer disclaimer */
+.footer{
+  margin-top:12px;
+  font-size:12px;
+  color:var(--muted);
+  text-align:center;
+}
+
+/* responsivo */
+@media(max-width:420px){
+  .logo{width:56px;height:56px}
+  .wave{height:34px}
+}
 </style>
 </head>
 <body>
-<div class="header"><div class="back" onclick="voltar()">← Voltar</div><img src="logo.png" class="logo" onerror="this.style.display='none'"></div>
 
-<div class="box">
-  <h3 style="color:var(--accent)">Microfone — Demonstração</h3>
-  <p class="small">Simulação de nível de áudio (demo).</p>
-  <div class="level"><i id="bar"></i></div>
-  <button class="btn" onclick="toggle()">Iniciar/Parar</button>
-  <div class="small">Nenhum áudio é gravado — apenas simulação visual.</div>
+<!-- aviso obrigatório e visível -->
+<div class="notice">
+  <strong>SIMULAÇÃO EDUCATIVA — NÃO GRAVA ÁUDIO.</strong>
+  <div style="font-size:12px;margin-top:6px;color:#ffdedecc">Esta interface mostra um comportamento visual realista apenas para fins de treinamento e demonstração. Nenhum som é capturado ou enviado.</div>
+</div>
+
+<div class="header">
+  <div class="back" onclick="voltar()">← Voltar</div>
+  <img src="logo.png" class="logo" onerror="this.style.display='none'">
+</div>
+
+<div class="box" role="region" aria-label="Simulador de microfone">
+  <div class="title">
+    <h3>Microfone</h3>
+    <div class="status" id="connWrap"><span class="status-dot" id="statusDot"></span><span id="statusText">Inativo</span></div>
+  </div>
+
+  <!-- medidor -->
+  <div class="level" aria-hidden><i id="bar"></i></div>
+
+  <!-- waveform decorativa -->
+  <div class="wave" id="wave">
+    <div class="bar" style="height:6px"></div>
+    <div class="bar" style="height:10px"></div>
+    <div class="bar" style="height:8px"></div>
+    <div class="bar" style="height:12px"></div>
+    <div class="bar" style="height:5px"></div>
+    <div class="bar" style="height:9px"></div>
+    <div class="bar" style="height:7px"></div>
+    <div class="bar" style="height:11px"></div>
+  </div>
+
+  <!-- transcrições simuladas -->
+  <div class="transcript" id="transcript" aria-live="polite">
+    <!-- linhas vão aparecer aqui -->
+  </div>
+
+  <div class="controls">
+    <button class="btn" id="startBtn" onclick="toggle()">Iniciar</button>
+    <button class="btn ghost" onclick="limpar()">Limpar</button>
+  </div>
+
+  <div class="footer">
+    Interface visual para demonstração. Nenhum áudio é gravado. Use este simulador para treinar identificação de indicadores.
+  </div>
 </div>
 
 <script>
 function voltar(){ location.href='dashboard.html'; }
-let on=false, t;
-function toggle(){
-  on = !on;
-  const bar = document.getElementById('bar');
-  if(on){ t=setInterval(()=>{ const w = Math.floor(Math.random()*80)+10; bar.style.width = w + '%'; }, 200); }
-  else { clearInterval(t); bar.style.width='0%'; }
+
+/* estado */
+let running = false;
+let barTimer = null;
+let waveTimer = null;
+let transcriptTimer = null;
+
+/* elementos */
+const bar = document.getElementById('bar');
+const wave = document.getElementById('wave');
+const startBtn = document.getElementById('startBtn');
+const transcriptEl = document.getElementById('transcript');
+const statusText = document.getElementById('statusText');
+const statusDot = document.getElementById('statusDot');
+
+/* atualiza visual de status */
+function setStatus(active){
+  if(active){
+    statusText.textContent = 'Gravando (simulado)';
+    statusDot.style.background = 'var(--green)';
+    statusDot.style.boxShadow = '0 0 8px rgba(126,217,87,0.9)';
+  } else {
+    statusText.textContent = 'Inativo';
+    statusDot.style.background = '#555';
+    statusDot.style.boxShadow = 'none';
+  }
 }
+
+/* gera valor pseudo-aleatório para medidor (sem áudio real) */
+function pseudoLevel(){
+  // curva: valor entre 3 e 95, com chance de picos
+  const base = Math.random()*40 + 10; // 10-50
+  const spike = (Math.random() < 0.08) ? (Math.random()*40 + 40) : 0; // picos raros
+  const val = Math.min(95, Math.round(base + spike));
+  return val;
+}
+
+/* anima medidor (barra) */
+function startBar(){
+  if(barTimer) clearInterval(barTimer);
+  barTimer = setInterval(()=>{
+    const v = pseudoLevel();
+    bar.style.width = v + '%';
+  }, 140);
+}
+function stopBar(){
+  if(barTimer) clearInterval(barTimer);
+  bar.style.width = '0%';
+}
+
+/* anima waveform decorativa */
+function startWave(){
+  const bars = Array.from(wave.children);
+  if(waveTimer) clearInterval(waveTimer);
+  waveTimer = setInterval(()=>{
+    bars.forEach((b,i)=>{
+      const h = Math.max(4, Math.floor(Math.random()*40) * (0.4 + Math.random()*0.8) * (1 - Math.abs(4 - i)/8));
+      b.style.height = Math.max(4, Math.round(h)) + 'px';
+    });
+  }, 120);
+}
+function stopWave(){
+  if(waveTimer) clearInterval(waveTimer);
+  Array.from(wave.children).forEach((b)=> b.style.height = '6px');
+}
+
+/* simula transcrições aparecendo enquanto "grava" */
+const samplePhrases = [
+  "Estou a caminho, chego em 10 minutos.",
+  "Tem que enviar o relatório até amanhã.",
+  "Liga para mim quando chegar.",
+  "A reunião foi adiada para a próxima semana.",
+  "Não esquece o documento assinado.",
+  "Vou passar aí em 15 minutos.",
+  "Pode confirmar o pagamento?",
+  "Preciso do número daquele cliente.",
+  "Tudo certo para a apresentação?",
+  "Onde você deixou as chaves?"
+];
+
+function startTranscript(){
+  if(transcriptTimer) clearInterval(transcriptTimer);
+  transcriptTimer = setInterval(()=>{
+    // a cada 3-7s adiciona uma linha
+    const phrase = samplePhrases[Math.floor(Math.random()*samplePhrases.length)];
+    const now = new Date().toLocaleTimeString();
+    const line = document.createElement('div');
+    line.textContent = `[${now}] ${phrase}`;
+    transcriptEl.appendChild(line);
+    transcriptEl.scrollTop = transcriptEl.scrollHeight;
+    // limitar a últimas 12 linhas
+    while(transcriptEl.children.length > 12) transcriptEl.removeChild(transcriptEl.firstChild);
+  }, 3500 + Math.random()*3500);
+}
+function stopTranscript(){
+  if(transcriptTimer) clearInterval(transcriptTimer);
+}
+
+/* liga/desliga tudo (simulado) */
+function toggle(){
+  running = !running;
+  if(running){
+    startBtn.textContent = 'Parar';
+    startBtn.classList.remove('btn');
+    startBtn.classList.add('btn','stop');
+    setStatus(true);
+    startBar();
+    startWave();
+    startTranscript();
+  } else {
+    startBtn.textContent = 'Iniciar';
+    startBtn.classList.remove('stop');
+    startBtn.classList.add('btn');
+    setStatus(false);
+    stopBar();
+    stopWave();
+    stopTranscript();
+  }
+}
+
+/* limpar transcrições */
+function limpar(){
+  transcriptEl.innerHTML = '';
+}
+
+/* acessibilidade: tecla espaço/enter no botão ativa */
+startBtn.addEventListener('keydown', (e)=>{ if(e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); toggle(); } });
+
+/* inicializa estado */
+setStatus(false);
 </script>
 </body>
 </html>
