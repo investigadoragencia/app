@@ -1,39 +1,396 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Teclado — App AI</title>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Teclado — Investigador AI (Simulação)</title>
 <style>
-:root{--bg:#000;--muted:#9aa3ad;--accent:#e50914}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:#fff;font-family:"Poppins",system-ui,Roboto,Arial;display:flex;flex-direction:column;align-items:center;padding:14px}
-.header{display:flex;align-items:center;gap:8px;width:100%;max-width:420px;margin-bottom:10px}
-.back{color:var(--muted);cursor:pointer}
-.logo{margin:0 auto;width:64px;height:64px;object-fit:contain}
-.box{width:100%;max-width:420px;background:#0f0f10;padding:12px;border-radius:12px}
-.row{font-family:monospace;white-space:pre-wrap;color:#ddd}
-.small{color:var(--muted);margin-top:10px}
+  :root{
+    --bg:#000;
+    --card:#0f0f10;
+    --accent:#e50914;
+    --muted:#9aa3ad;
+    --text:#fff;
+    --green:#7ed957;
+    --radius:12px;
+    font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    min-height:100vh;
+    background:var(--bg);
+    color:var(--text);
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:18px;
+  }
+
+  .wrap{ width:100%; max-width:980px; display:grid; grid-template-columns: 1fr 360px; gap:18px; }
+
+  .panel{
+    background: linear-gradient(180deg, rgba(18,18,18,.98), rgba(12,12,12,.98));
+    border:1px solid rgba(255,255,255,0.03);
+    border-radius:var(--radius);
+    padding:14px;
+    box-shadow:0 12px 36px rgba(229,9,20,0.06);
+  }
+
+  .header{ display:flex; gap:12px; align-items:center; justify-content:space-between; margin-bottom:12px; }
+  .brand{ display:flex; gap:12px; align-items:center; }
+  .logo{ width:56px; height:56px; border-radius:10px; background:linear-gradient(180deg,#111,#070707); display:grid; place-items:center; color:var(--accent); font-weight:800; }
+  .title{ font-weight:700; font-size:18px; }
+  .subtitle{ color:var(--muted); font-size:13px; }
+
+  .status{ text-align:right; font-size:13px; color:var(--muted); display:flex; flex-direction:column; align-items:flex-end; gap:4px; }
+  .onlineBadge{ display:flex; align-items:center; gap:8px; }
+  .status-dot{ width:10px; height:10px; border-radius:50%; background:#555; box-shadow:none; display:inline-block; transition:all .15s ease; }
+  .status-online{ color:var(--green); font-weight:700; }
+
+  /* Controls */
+  .controls{ display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
+  .btn{ background:var(--accent); color:#fff; padding:8px 12px; border-radius:10px; border:none; cursor:pointer; font-weight:600; }
+  .btn.ghost{ background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--muted); }
+
+  /* Left column content (logs) */
+  .actionsRow{ display:flex; gap:10px; align-items:center; margin-bottom:8px; }
+  .search{ padding:8px 10px; border-radius:8px; background:#0b0b0b; border:1px solid rgba(255,255,255,0.03); color:var(--text); width:100%; }
+  .filters{ display:flex; gap:8px; flex-wrap:wrap; }
+
+  .logTable{ width:100%; border-collapse:collapse; font-size:13px; margin-top:6px; }
+  .logTable th, .logTable td{ padding:10px 8px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.03); }
+  .logTable th{ color:var(--muted); font-weight:600; font-size:12px; }
+  .appTag{ font-size:12px; color:#000; background:#ddd; padding:4px 8px; border-radius:8px; display:inline-block; }
+
+  /* Right column */
+  .sideBox{ background:linear-gradient(180deg, rgba(18,18,18,.96), rgba(12,12,12,.96)); border-radius:12px; padding:12px; border:1px solid rgba(255,255,255,0.03); }
+  .sectionTitle{ font-weight:700; color:var(--accent); margin-bottom:8px; }
+  .simInput{ width:100%; padding:10px; border-radius:8px; background:#0b0b0b; border:1px solid rgba(255,255,255,0.03); color:var(--text); margin-bottom:8px; }
+  .small{ color:var(--muted); font-size:13px; margin-top:8px; }
+
+  .toggleRow{ display:flex; gap:8px; align-items:center; margin-top:8px; }
+
+  /* transcript / bubble style in table */
+  .keystext{ font-family: monospace, monospace; background:linear-gradient(180deg,#070707,#0d0d0d); padding:6px 8px; border-radius:8px; display:inline-block; max-width:420px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+  /* responsive */
+  @media(max-width:980px){ .wrap{ grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
-<div class="header"><div class="back" onclick="voltar()">← Voltar</div><img src="logo.png" class="logo" onerror="this.style.display='none'"></div>
 
-<div class="box">
-  <h3 style="color:var(--accent)">Teclas digitadas (simuladas)</h3>
-  <div id="log" class="row"></div>
+<div class="wrap">
+  <!-- LEFT: logs -->
+  <main class="panel" aria-label="Registro de teclas (simulado)">
+    <div class="header">
+      <div class="brand">
+        <div class="logo">AI</div>
+        <div>
+          <div class="title">Teclado — Investigador AI</div>
+          <div class="subtitle">Registros simulados de digitação</div>
+        </div>
+      </div>
+
+      <div class="status" aria-live="polite">
+        <div class="onlineBadge">
+          <span id="statusDot" class="status-dot" style="background:#7ed957; box-shadow:0 0 6px rgba(126,217,87,0.85)"></span>
+          <div><span class="status-online">Online</span></div>
+        </div>
+        <div style="font-size:12px;color:var(--muted)">Última atualização: <span id="timeLabel">—</span></div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn" id="btnGenerate">Gerar registros fictícios</button>
+      <button class="btn ghost" id="btnStartAuto">Auto (on)</button>
+      <button class="btn ghost" id="btnExport">Exportar CSV</button>
+      <button class="btn ghost" id="btnClear">Limpar</button>
+    </div>
+
+    <div class="actionsRow">
+      <input id="searchInput" class="search" placeholder="Pesquisar texto, app ou usuário..." aria-label="Pesquisar registros">
+    </div>
+
+    <div class="filters" style="margin-bottom:8px">
+      <label style="font-size:13px;color:var(--muted)">Filtrar por app:</label>
+      <select id="filterApp" style="padding:8px;border-radius:8px;background:#0b0b0b;border:1px solid rgba(255,255,255,0.03);color:var(--text)">
+        <option value="">Todos</option>
+      </select>
+      <label style="font-size:13px;color:var(--muted)">Mascarar sensíveis</label>
+      <input type="checkbox" id="maskSensitive" checked style="transform:scale(1.1)">
+    </div>
+
+    <table class="logTable" aria-live="polite" id="logTable">
+      <thead>
+        <tr><th>Hora</th><th>App / Janela</th><th>Usuário</th><th>Texto</th></tr>
+      </thead>
+      <tbody id="logBody">
+        <!-- linhas geradas dinamicamente -->
+      </tbody>
+    </table>
+  </main>
+
+  <!-- RIGHT: controls / simulator -->
+  <aside class="sideBox" aria-label="Controles de simulação">
+    <div class="sectionTitle">Entrada voluntária</div>
+    <div class="small">Área de teste — digite aqui para adicionar um registro (entrada voluntária).</div>
+    <textarea id="voluntaryInput" class="simInput" rows="4" placeholder="Digite algo para simular (ex.: 'senha: 1234')"></textarea>
+    <button class="btn" id="btnAddVol">Adicionar como registro</button>
+
+    <div style="height:12px"></div>
+
+    <div class="sectionTitle">Configuração de simulação</div>
+    <label class="small">Velocidade de geração automática:</label>
+    <select id="speedSelect" style="width:100%;padding:8px;border-radius:8px;background:#0b0b0b;border:1px solid rgba(255,255,255,0.03);color:var(--text);margin-top:6px">
+      <option value="4000">Lenta (4s)</option>
+      <option value="2500" selected>Média (2.5s)</option>
+      <option value="1200">Rápida (1.2s)</option>
+    </select>
+
+    <div class="toggleRow">
+      <input type="checkbox" id="includeSensitive" checked>
+      <label class="small" for="includeSensitive">Incluir frases com palavras sensíveis (simulado)</label>
+    </div>
+
+    <div class="toggleRow">
+      <input type="checkbox" id="autoScroll" checked>
+      <label class="small" for="autoScroll">Rolagem automática</label>
+    </div>
+
+    <div style="height:10px"></div>
+    <div class="small">Export e filtros para análise didática. Lembre: tudo é SIMULADO — sem captura oculta.</div>
+  </aside>
 </div>
-<div class="small">Apenas demonstração — texto gerado localmente.</div>
 
 <script>
-function voltar(){ location.href='dashboard.html'; }
-const samples=['senha123','teste rápido','Olá, tudo bem?','Compra online','Mensagem enviada','192.168.0.1','admin@ex.com','senha_nao_segura'];
-const log = document.getElementById('log');
-let i=0;
-function append(){
-  if(i>=samples.length) return;
-  log.textContent += samples[i] + '\n';
-  i++;
-  setTimeout(append, 500 + Math.random()*900);
+/* ---------- dados e utilitários ---------- */
+const APPS = ['WhatsApp','Chrome','Gmail','Instagram','Facebook','Telegram','Notas','BancoApp','Slack','Edge'];
+const USERS = ['Ana Silva','Bruno Costa','Carlos P.','Daniela S.','Eduardo L.','Fernanda R.','Gabriel M.','Helena A.','Igor R.','Juliana M.'];
+const SENSITIVE_WORDS = ['senha','cpf','cartão','token','1234','senha123','agência','conta'];
+
+// tabela de logs (simulados)
+let logs = [];
+
+/* DOM */
+const logBody = document.getElementById('logBody');
+const btnGenerate = document.getElementById('btnGenerate');
+const btnStartAuto = document.getElementById('btnStartAuto');
+const btnExport = document.getElementById('btnExport');
+const btnClear = document.getElementById('btnClear');
+const searchInput = document.getElementById('searchInput');
+const filterApp = document.getElementById('filterApp');
+const maskCheckbox = document.getElementById('maskSensitive');
+const voluntaryInput = document.getElementById('voluntaryInput');
+const btnAddVol = document.getElementById('btnAddVol');
+const speedSelect = document.getElementById('speedSelect');
+const includeSensitive = document.getElementById('includeSensitive');
+const autoScroll = document.getElementById('autoScroll');
+const statusDot = document.getElementById('statusDot');
+const timeLabel = document.getElementById('timeLabel');
+
+/* preencher filtro de apps */
+(function fillAppFilter(){
+  APPS.forEach(a=>{
+    const opt = document.createElement('option');
+    opt.value = a; opt.textContent = a;
+    filterApp.appendChild(opt);
+  });
+})();
+
+/* utilities */
+function nowIso(){ return new Date().toLocaleString(); }
+function rnd(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+/* mask sensitive words (simulation) */
+function maskSensitiveText(text){
+  // substitui aparições das palavras sensíveis por **** (case-insensitive)
+  let masked = text;
+  SENSITIVE_WORDS.forEach(s=>{
+    const re = new RegExp(s,'ig');
+    masked = masked.replace(re, '••••');
+  });
+  return masked;
 }
-append();
+
+/* safe render of text for table (shorten) */
+function renderText(t){
+  const max = 80;
+  if(t.length > max) return t.slice(0, max-2) + '…';
+  return t;
+}
+
+/* append log */
+function addLog({ts, app, user, text}){
+  const id = Date.now() + '-' + Math.random().toString(36).slice(2,8);
+  logs.unshift({id, ts, app, user, text}); // push to beginning (newest first)
+  refreshTable();
+}
+
+/* render table */
+function refreshTable(){
+  const q = searchInput.value.trim().toLowerCase();
+  const appFilter = filterApp.value;
+  logBody.innerHTML = '';
+  const mask = maskCheckbox.checked;
+  const rows = logs.filter(l=>{
+    if(appFilter && l.app !== appFilter) return false;
+    if(!q) return true;
+    return (l.user.toLowerCase().includes(q) || l.app.toLowerCase().includes(q) || l.text.toLowerCase().includes(q));
+  });
+  rows.forEach(l=>{
+    const tr = document.createElement('tr');
+    const text = mask ? maskSensitiveText(l.text) : l.text;
+    tr.innerHTML = `<td style="white-space:nowrap;font-size:13px;color:var(--muted)">${l.ts}</td>
+                    <td style="font-weight:700">${l.app}</td>
+                    <td style="color:var(--muted)">${l.user}</td>
+                    <td><span class="keystext" title="${l.text}">${renderText(text)}</span></td>`;
+    logBody.appendChild(tr);
+  });
+  if(autoScroll.checked){
+    // scroll to top behavior: newest at top — nothing needed; but if not empty, ensure view shows top
+    // we won't auto-scroll to bottom to avoid jumping.
+  }
+}
+
+/* ---------- generation of realistic entries ---------- */
+function makeRandomKeystroke(includeSensitive=false){
+  const app = pick(APPS);
+  const user = pick(USERS);
+  // assemble plausible texts:
+  const common = [
+    "Olá, vou chegar em 10 minutos.",
+    "Confirmando reunião para amanhã às 14h.",
+    "Não esquece de assinar o contrato.",
+    "Pode me enviar o número do cliente?",
+    "Passa o PIX quando puder.",
+    "Vamos almoçar hoje?",
+    "Recebi o documento, obrigado.",
+    "Está tudo certo com o pedido.",
+    "Te ligo daqui a pouco.",
+    "Onde deixei as chaves?"
+  ];
+  const sensitiveExamples = [
+    "senha: 123456",
+    "senha123",
+    "cpf 123.456.789-00",
+    "cartão 4111 1111 1111 1111",
+    "token: 987654",
+    "agência 0001 conta 12345-6"
+  ];
+  let text;
+  if(includeSensitive && Math.random() < 0.18){
+    text = pick(sensitiveExamples);
+  } else {
+    // sometimes combine short phrases to seem real
+    text = pick(common);
+    if(Math.random() < 0.25) text += ' ' + pick(common);
+  }
+  return { app, user, text, ts: nowIso() };
+}
+
+/* public controls */
+btnGenerate.addEventListener('click', ()=>{
+  // generate between 5 and 12 entries to look real
+  const n = rnd(5,12);
+  for(let i=0;i<n;i++){
+    const e = makeRandomKeystroke(includeSensitive.checked);
+    addLog(e);
+  }
+});
+
+/* auto generator */
+let autoTimer = null;
+let autoOn = true;
+function startAuto(){
+  if(autoTimer) clearInterval(autoTimer);
+  const speed = parseInt(speedSelect.value,10) || 2500;
+  autoTimer = setInterval(()=>{
+    const entry = makeRandomKeystroke(includeSensitive.checked);
+    addLog(entry);
+  }, speed);
+  autoOn = true;
+  btnStartAuto.textContent = 'Auto (on)';
+  btnStartAuto.classList.remove('ghost'); btnStartAuto.classList.add('btn');
+}
+function stopAuto(){
+  if(autoTimer) clearInterval(autoTimer);
+  autoTimer = null;
+  autoOn = false;
+  btnStartAuto.textContent = 'Auto (off)';
+  btnStartAuto.classList.remove('btn'); btnStartAuto.classList.add('btn','ghost');
+}
+btnStartAuto.addEventListener('click', ()=>{
+  if(autoOn) stopAuto(); else startAuto();
+});
+startAuto(); // initial state on
+
+/* voluntary input */
+btnAddVol.addEventListener('click', ()=>{
+  const t = voluntaryInput.value.trim();
+  if(!t) { alert('Digite algo na área de teste para adicionar um registro.'); return; }
+  const app = prompt('Informe o app/janela onde isto foi digitado (ex: WhatsApp, Chrome):','Notas') || 'Notas';
+  const user = prompt('Nome do usuário associado (opcional):', pick(USERS)) || pick(USERS);
+  addLog({ ts: nowIso(), app, user, text: t });
+  voluntaryInput.value = '';
+});
+
+/* search and filters */
+searchInput.addEventListener('input', ()=> refreshTable());
+filterApp.addEventListener('change', ()=> refreshTable());
+maskCheckbox.addEventListener('change', ()=> refreshTable());
+speedSelect.addEventListener('change', ()=>{
+  if(autoOn){ startAuto(); } // restart with new speed
+});
+
+/* export CSV */
+btnExport.addEventListener('click', ()=>{
+  if(!logs.length){ alert('Sem registros para exportar.'); return; }
+  const rows = [['ts','app','user','text']];
+  // export visible rows only (after filter/search)
+  const q = searchInput.value.trim().toLowerCase();
+  const appFilter = filterApp.value;
+  logs.forEach(l=>{
+    if(appFilter && l.app !== appFilter) return;
+    if(q && !(l.user.toLowerCase().includes(q) || l.app.toLowerCase().includes(q) || l.text.toLowerCase().includes(q))) return;
+    rows.push([`"${l.ts}"`,`"${l.app}"`,`"${l.user}"`,`"${l.text.replace(/"/g,'""')}"`]);
+  });
+  const csv = rows.map(r=>r.join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'teclado_simulado.csv';
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+});
+
+/* clear */
+btnClear.addEventListener('click', ()=>{
+  if(!confirm('Limpar todos os registros simulados?')) return;
+  logs = [];
+  refreshTable();
+});
+
+/* initial demo data so page looks populated */
+(function seedInitial(){
+  for(let i=0;i<12;i++){
+    const e = makeRandomKeystroke(true);
+    logs.push({ id: i, ts: e.ts, app: e.app, user: e.user, text: e.text });
+  }
+  refreshTable();
+})();
+
+/* keep time label updated */
+setInterval(()=>{ timeLabel.textContent = new Date().toLocaleTimeString(); }, 1000);
+
+/* accessibility: keyboard triggers */
+document.addEventListener('keydown', (e)=>{
+  // ctrl+g = gerar, ctrl+a = toggle auto, ctrl+e = export
+  if(e.ctrlKey && e.key.toLowerCase() === 'g'){ e.preventDefault(); btnGenerate.click(); }
+  if(e.ctrlKey && e.key.toLowerCase() === 'a'){ e.preventDefault(); btnStartAuto.click(); }
+  if(e.ctrlKey && e.key.toLowerCase() === 'e'){ e.preventDefault(); btnExport.click(); }
+});
 </script>
+
 </body>
 </html>
