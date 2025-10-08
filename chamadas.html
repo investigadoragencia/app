@@ -1,36 +1,128 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Chamadas — App AI</title>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Chamadas — Investigador AI</title>
 <style>
-:root{--bg:#000;--accent:#e50914;--muted:#9aa3ad}
+:root{
+  --bg:#000;
+  --accent:#e50914;
+  --muted:#9aa3ad;
+  --card:#0f0f10;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:#fff;font-family:"Poppins",system-ui,Roboto,Arial;display:flex;flex-direction:column;align-items:center;padding:14px}
-.header{width:100%;max-width:420px;display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.back{color:var(--muted);cursor:pointer}
-.logo{margin:0 auto;width:64px;height:64px;object-fit:contain}
-.container{width:100%;max-width:420px;background:#0f0f10;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
-.call{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
-.name{font-weight:700}
-.time{color:var(--muted);font-size:13px}
-.note{color:var(--muted);text-align:center;margin-top:10px;font-size:13px}
+body{
+  background:var(--bg);
+  color:#fff;
+  font-family:"Poppins",system-ui,Roboto,Arial;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:14px;
+  min-height:100vh;
+}
+.header{
+  width:100%;
+  max-width:420px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:10px;
+}
+.back{
+  color:var(--muted);
+  cursor:pointer;
+  font-size:14px;
+}
+.logo{
+  margin:0 auto;
+  width:64px;
+  height:64px;
+  object-fit:contain;
+}
+.container{
+  width:100%;
+  max-width:420px;
+  background:var(--card);
+  padding:12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.04);
+  box-shadow:0 6px 16px rgba(0,0,0,0.4);
+}
+.call{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 0;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.call:last-child{border-bottom:none;}
+.left{display:flex;align-items:center;gap:10px;}
+.avatar{
+  width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:700;font-size:16px;
+  flex-shrink:0;
+}
+.name{font-weight:700;font-size:15px;}
+.dir{font-size:13px;color:var(--muted);}
+.time{color:var(--muted);font-size:13px;}
 </style>
 </head>
 <body>
-<div class="header"><div class="back" onclick="voltar()">← Voltar</div><img src="logo.png" class="logo" onerror="this.style.display='none'"></div>
+
+<div class="header">
+  <div class="back" onclick="voltar()">← Voltar</div>
+  <img src="logo.png" class="logo" onerror="this.style.display='none'">
+</div>
 
 <div class="container" id="list"></div>
-<div class="note">Registro de chamadas fictícias — demonstração.</div>
 
 <script>
 function voltar(){ location.href='dashboard.html'; }
-const calls = [
-  {name:'Contato A', dir:'Recebida', time:'Hoje, 10:12'},
-  {name:'Contato B', dir:'Perdida', time:'Ontem, 22:03'},
-  {name:'Contato C', dir:'Realizada', time:'06/10/2025, 08:35'},
-  {name:'Contato D', dir:'Recebida', time:'05/10/2025, 19:20'}
+
+const nomes = [
+  'Ana Silva','Bruno Costa','Carlos Pereira','Daniela Souza','Eduardo Lima',
+  'Fernanda Rocha','Gabriel Martins','Helena Alves','Igor Ribeiro','Juliana Melo',
+  'Kleber Santos','Larissa Gomes','Marcelo Dias','Natália Pires','Otávio Nunes',
+  'Patrícia Duarte','Rafael Moreira','Sabrina Lopes','Tiago Carvalho','Viviane Freitas'
 ];
-const list=document.getElementById('list');
-calls.forEach(c=>{ const row=document.createElement('div'); row.className='call'; row.innerHTML=`<div><div class="name">${c.name}</div><div class="time">${c.dir}</div></div><div class="time">${c.time}</div>`; list.appendChild(row); });
+
+const tipos = ['Recebida','Perdida','Realizada'];
+const cores = ['#e50914','#ff3b3b','#ff6b6b','#ff9800','#ffc107','#4caf50','#2196f3','#9c27b0','#f44336','#00bcd4'];
+const list = document.getElementById('list');
+
+// gera data/hora aleatória das últimas 48h
+function gerarHora(){
+  const agora = new Date();
+  const ms = agora - Math.floor(Math.random()*2*24*60*60*1000);
+  const d = new Date(ms);
+  const dia = d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
+  const hora = d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  return `${dia} ${hora}`;
+}
+
+nomes.forEach((nome,i)=>{
+  const tipo = tipos[Math.floor(Math.random()*tipos.length)];
+  const cor = cores[i % cores.length];
+  const inicial = nome.charAt(0).toUpperCase();
+  const hora = gerarHora();
+
+  const div = document.createElement('div');
+  div.className = 'call';
+  div.innerHTML = `
+    <div class="left">
+      <div class="avatar" style="background:${cor}">${inicial}</div>
+      <div>
+        <div class="name">${nome}</div>
+        <div class="dir">${tipo}</div>
+      </div>
+    </div>
+    <div class="time">${hora}</div>
+  `;
+  list.appendChild(div);
+});
 </script>
 </body>
 </html>
