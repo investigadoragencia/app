@@ -1,396 +1,577 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Teclado — Investigador AI (Simulação)</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Teclado — Investigador AI (Simulado Pro)</title>
 <style>
-  :root{
-    --bg:#000;
-    --card:#0f0f10;
-    --accent:#e50914;
-    --muted:#9aa3ad;
-    --text:#fff;
-    --green:#7ed957;
-    --radius:12px;
-    font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{
-    min-height:100vh;
-    background:var(--bg);
-    color:var(--text);
-    display:flex;
-    align-items:flex-start;
-    justify-content:center;
-    padding:18px;
-  }
+:root{
+  --bg:#000;
+  --card:#0f0f10;
+  --accent:#e50914;
+  --accent-2:#ff6b6b;
+  --muted:#9aa3ad;
+  --text:#fff;
+  --green:#7ed957;
+  --radius:12px;
+  --glass: rgba(255,255,255,0.03);
+  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:linear-gradient(180deg,#060606,#0a0a0a);
+  color:var(--text);
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding:18px;
+}
 
-  .wrap{ width:100%; max-width:980px; display:grid; grid-template-columns: 1fr 360px; gap:18px; }
+/* layout */
+.wrap{
+  width:100%;
+  max-width:1100px;
+  display:grid;
+  grid-template-columns: 1fr 360px;
+  gap:18px;
+}
+.panel{
+  background: linear-gradient(180deg, rgba(18,18,18,.98), rgba(12,12,12,.98));
+  border-radius:var(--radius);
+  padding:14px;
+  border:1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 18px 46px rgba(0,0,0,0.7);
+}
+.side{
+  background: linear-gradient(180deg, rgba(18,18,18,.96), rgba(12,12,12,.96));
+  border-radius:var(--radius);
+  padding:14px;
+  border:1px solid rgba(255,255,255,0.03);
+}
 
-  .panel{
-    background: linear-gradient(180deg, rgba(18,18,18,.98), rgba(12,12,12,.98));
-    border:1px solid rgba(255,255,255,0.03);
-    border-radius:var(--radius);
-    padding:14px;
-    box-shadow:0 12px 36px rgba(229,9,20,0.06);
-  }
+/* header */
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:12px}
+.brand{display:flex;gap:12px;align-items:center}
+.logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(180deg,#111,#070707);display:grid;place-items:center;color:var(--accent);font-weight:800}
+.title{font-weight:700;font-size:18px}
+.subtitle{color:var(--muted);font-size:13px}
 
-  .header{ display:flex; gap:12px; align-items:center; justify-content:space-between; margin-bottom:12px; }
-  .brand{ display:flex; gap:12px; align-items:center; }
-  .logo{ width:56px; height:56px; border-radius:10px; background:linear-gradient(180deg,#111,#070707); display:grid; place-items:center; color:var(--accent); font-weight:800; }
-  .title{ font-weight:700; font-size:18px; }
-  .subtitle{ color:var(--muted); font-size:13px; }
+/* status */
+.status{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.onlineBadge{display:flex;align-items:center;gap:8px}
+.status-dot{width:10px;height:10px;border-radius:50%;background:#555;display:inline-block;transition:all .18s ease;box-shadow:none}
+.status-text{font-size:13px;color:var(--muted)}
 
-  .status{ text-align:right; font-size:13px; color:var(--muted); display:flex; flex-direction:column; align-items:flex-end; gap:4px; }
-  .onlineBadge{ display:flex; align-items:center; gap:8px; }
-  .status-dot{ width:10px; height:10px; border-radius:50%; background:#555; box-shadow:none; display:inline-block; transition:all .15s ease; }
-  .status-online{ color:var(--green); font-weight:700; }
+/* controls */
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.btn{background:var(--accent);color:#fff;padding:9px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+.btn.small{padding:6px 9px;font-size:13px}
+.select, .input{
+  padding:8px;border-radius:8px;background:#0b0b0b;border:1px solid rgba(255,255,255,0.03);color:var(--text);
+}
 
-  /* Controls */
-  .controls{ display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
-  .btn{ background:var(--accent); color:#fff; padding:8px 12px; border-radius:10px; border:none; cursor:pointer; font-weight:600; }
-  .btn.ghost{ background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--muted); }
+/* search/filter row */
+.row{display:flex;gap:8px;margin-bottom:10px;align-items:center}
+.search{flex:1}
 
-  /* Left column content (logs) */
-  .actionsRow{ display:flex; gap:10px; align-items:center; margin-bottom:8px; }
-  .search{ padding:8px 10px; border-radius:8px; background:#0b0b0b; border:1px solid rgba(255,255,255,0.03); color:var(--text); width:100%; }
-  .filters{ display:flex; gap:8px; flex-wrap:wrap; }
+/* table/logs */
+.tableWrap{overflow:auto;border-radius:10px;background:linear-gradient(180deg,#080808,#0b0b0b);padding:10px;border:1px solid rgba(255,255,255,0.03)}
+.logTable{width:100%;border-collapse:collapse;font-size:13px}
+.logTable th, .logTable td{padding:10px 8px;border-bottom:1px solid rgba(255,255,255,0.04);text-align:left;vertical-align:middle}
+.logTable th{color:var(--muted);font-weight:700;font-size:12px}
+.appTag{font-size:12px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,0.06);display:inline-block;color:var(--text)}
+.userName{font-weight:700}
+.keystext{font-family:monospace;background:linear-gradient(180deg,#070707,#0d0d0d);padding:6px 8px;border-radius:8px;display:inline-block;max-width:420px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-  .logTable{ width:100%; border-collapse:collapse; font-size:13px; margin-top:6px; }
-  .logTable th, .logTable td{ padding:10px 8px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.03); }
-  .logTable th{ color:var(--muted); font-weight:600; font-size:12px; }
-  .appTag{ font-size:12px; color:#000; background:#ddd; padding:4px 8px; border-radius:8px; display:inline-block; }
+/* badge highlight for new row */
+.newRow{
+  animation:newHighlight 1.2s ease;
+}
+@keyframes newHighlight{
+  0%{background:linear-gradient(90deg, rgba(126,217,87,0.18), rgba(126,217,87,0.04))}
+  100%{background:transparent}
+}
 
-  /* Right column */
-  .sideBox{ background:linear-gradient(180deg, rgba(18,18,18,.96), rgba(12,12,12,.96)); border-radius:12px; padding:12px; border:1px solid rgba(255,255,255,0.03); }
-  .sectionTitle{ font-weight:700; color:var(--accent); margin-bottom:8px; }
-  .simInput{ width:100%; padding:10px; border-radius:8px; background:#0b0b0b; border:1px solid rgba(255,255,255,0.03); color:var(--text); margin-bottom:8px; }
-  .small{ color:var(--muted); font-size:13px; margin-top:8px; }
+/* chart */
+.chartBox{margin-top:12px;background:#070707;border-radius:8px;padding:10px;border:1px solid rgba(255,255,255,0.03)}
+canvas{width:100%;height:140px;display:block}
 
-  .toggleRow{ display:flex; gap:8px; align-items:center; margin-top:8px; }
+/* side controls */
+.sectionTitle{font-weight:700;color:var(--accent);margin-bottom:8px}
+.simInput{width:100%;min-height:88px;padding:10px;border-radius:8px;background:#0b0b0b;border:1px solid rgba(255,255,255,0.03);color:var(--text);resize:vertical}
+.small{font-size:13px;color:var(--muted);margin-top:8px}
 
-  /* transcript / bubble style in table */
-  .keystext{ font-family: monospace, monospace; background:linear-gradient(180deg,#070707,#0d0d0d); padding:6px 8px; border-radius:8px; display:inline-block; max-width:420px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+/* footer */
+.notice{margin-top:12px;background:linear-gradient(90deg, rgba(255,80,80,0.08), rgba(255,40,40,0.03));padding:10px;border-radius:8px;border:1px solid rgba(229,9,20,0.08);font-size:13px;color:#ffdede;text-align:center}
 
-  /* responsive */
-  @media(max-width:980px){ .wrap{ grid-template-columns: 1fr; } }
+/* responsive */
+@media(max-width:980px){
+  .wrap{grid-template-columns:1fr; padding:0 6px}
+  .status{align-items:flex-start}
+  .status-text{text-align:left}
+  .brand{gap:8px}
+}
 </style>
 </head>
 <body>
 
 <div class="wrap">
-  <!-- LEFT: logs -->
-  <main class="panel" aria-label="Registro de teclas (simulado)">
+  <!-- LEFT: main panel -->
+  <main class="panel" aria-label="Registros de teclado simulados">
     <div class="header">
       <div class="brand">
         <div class="logo">AI</div>
         <div>
           <div class="title">Teclado — Investigador AI</div>
-          <div class="subtitle">Registros simulados de digitação</div>
+          <div class="subtitle">Registros simulados e análise por app</div>
         </div>
       </div>
 
       <div class="status" aria-live="polite">
         <div class="onlineBadge">
-          <span id="statusDot" class="status-dot" style="background:#7ed957; box-shadow:0 0 6px rgba(126,217,87,0.85)"></span>
-          <div><span class="status-online">Online</span></div>
+          <span id="statusDot" class="status-dot" style="background:var(--green);box-shadow:0 0 8px rgba(126,217,87,0.85)"></span>
+          <div class="status-text"><span id="statusLabel">Online</span></div>
         </div>
-        <div style="font-size:12px;color:var(--muted)">Última atualização: <span id="timeLabel">—</span></div>
+        <div class="status-text">Última atualização: <span id="timeLabel">—</span></div>
       </div>
     </div>
 
-    <div class="controls">
-      <button class="btn" id="btnGenerate">Gerar registros fictícios</button>
-      <button class="btn ghost" id="btnStartAuto">Auto (on)</button>
-      <button class="btn ghost" id="btnExport">Exportar CSV</button>
-      <button class="btn ghost" id="btnClear">Limpar</button>
-    </div>
+    <div class="controls" role="toolbar">
+      <button class="btn" id="btnGenerate">Gerar (volume)</button>
+      <button class="btn ghost small" id="btnToggleAuto">Auto: ON</button>
+      <button class="btn ghost small" id="btnExport">Exportar CSV</button>
+      <button class="btn ghost small" id="btnClear">Limpar</button>
 
-    <div class="actionsRow">
-      <input id="searchInput" class="search" placeholder="Pesquisar texto, app ou usuário..." aria-label="Pesquisar registros">
-    </div>
-
-    <div class="filters" style="margin-bottom:8px">
-      <label style="font-size:13px;color:var(--muted)">Filtrar por app:</label>
-      <select id="filterApp" style="padding:8px;border-radius:8px;background:#0b0b0b;border:1px solid rgba(255,255,255,0.03);color:var(--text)">
-        <option value="">Todos</option>
+      <select id="speedSelect" class="select" style="margin-left:auto">
+        <option value="4000">Lento (4s)</option>
+        <option value="2500" selected>Médio (2.5s)</option>
+        <option value="1200">Rápido (1.2s)</option>
       </select>
-      <label style="font-size:13px;color:var(--muted)">Mascarar sensíveis</label>
-      <input type="checkbox" id="maskSensitive" checked style="transform:scale(1.1)">
     </div>
 
-    <table class="logTable" aria-live="polite" id="logTable">
-      <thead>
-        <tr><th>Hora</th><th>App / Janela</th><th>Usuário</th><th>Texto</th></tr>
-      </thead>
-      <tbody id="logBody">
-        <!-- linhas geradas dinamicamente -->
-      </tbody>
-    </table>
+    <div class="row">
+      <input id="searchInput" class="input search" placeholder="Pesquisar texto, app ou usuário...">
+      <select id="filterApp" class="select" style="width:170px">
+        <option value="">Filtrar app: Todos</option>
+      </select>
+      <label style="display:flex;align-items:center;gap:6px;color:var(--muted);font-size:13px">
+        <input type="checkbox" id="maskSensitive" checked> Mascarar sensíveis
+      </label>
+    </div>
+
+    <div class="tableWrap" role="table" aria-label="Tabela de registros">
+      <table class="logTable" id="logTable">
+        <thead>
+          <tr><th>Hora</th><th>App</th><th>Usuário</th><th>Texto</th></tr>
+        </thead>
+        <tbody id="logBody">
+          <!-- rows -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="chartBox" aria-hidden>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font-weight:700;color:var(--muted)">Volume por app</div>
+        <div style="font-size:13px;color:var(--muted)">últimos registros</div>
+      </div>
+      <canvas id="barChart" width="600" height="140"></canvas>
+    </div>
+
+    <div class="notice" role="status" aria-live="polite">
+      <strong>SIMULAÇÃO EDUCATIVA — NÃO CAPTURA TECLAS REAIS.</strong>
+      <div style="font-size:12px;margin-top:6px">Painel visual para demonstração e treinamento. Todos os dados são gerados localmente no navegador.</div>
+    </div>
   </main>
 
-  <!-- RIGHT: controls / simulator -->
-  <aside class="sideBox" aria-label="Controles de simulação">
+  <!-- RIGHT: side controls -->
+  <aside class="side">
     <div class="sectionTitle">Entrada voluntária</div>
-    <div class="small">Área de teste — digite aqui para adicionar um registro (entrada voluntária).</div>
-    <textarea id="voluntaryInput" class="simInput" rows="4" placeholder="Digite algo para simular (ex.: 'senha: 1234')"></textarea>
-    <button class="btn" id="btnAddVol">Adicionar como registro</button>
+    <div class="small">Digite algo e clique em "Adicionar" para que apareça como registro (entrada voluntária).</div>
+    <textarea id="voluntaryInput" class="simInput" placeholder="Ex.: 'Envia o relatório amanhã'"></textarea>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <select id="volApp" class="select" style="flex:1"></select>
+      <select id="volUser" class="select" style="width:140px"></select>
+    </div>
+    <button class="btn" id="btnAddVol" style="width:100%;margin-top:8px">Adicionar registro</button>
 
     <div style="height:12px"></div>
+    <div class="sectionTitle">Configurações</div>
+    <label class="small">Incluir frases sensíveis (simulado)</label>
+    <label style="display:flex;gap:8px;align-items:center;margin-top:6px">
+      <input type="checkbox" id="includeSensitive" checked><span class="small">Permitir exemplos sensíveis</span>
+    </label>
 
-    <div class="sectionTitle">Configuração de simulação</div>
-    <label class="small">Velocidade de geração automática:</label>
-    <select id="speedSelect" style="width:100%;padding:8px;border-radius:8px;background:#0b0b0b;border:1px solid rgba(255,255,255,0.03);color:var(--text);margin-top:6px">
-      <option value="4000">Lenta (4s)</option>
-      <option value="2500" selected>Média (2.5s)</option>
-      <option value="1200">Rápida (1.2s)</option>
-    </select>
+    <label class="small" style="margin-top:10px">Auto-expurgo quando OFFLINE</label>
+    <label style="display:flex;gap:8px;align-items:center;margin-top:6px">
+      <input type="checkbox" id="pruneOnOffline" checked>
+      <span class="small">Apagar antigas enquanto offline</span>
+    </label>
 
-    <div class="toggleRow">
-      <input type="checkbox" id="includeSensitive" checked>
-      <label class="small" for="includeSensitive">Incluir frases com palavras sensíveis (simulado)</label>
+    <div class="small" style="margin-top:12px;color:var(--muted)">
+      Export e filtros para análise. Tudo simulado — sem coleta oculta. A página pausa geração automática quando ficar offline e retoma quando voltar online.
     </div>
-
-    <div class="toggleRow">
-      <input type="checkbox" id="autoScroll" checked>
-      <label class="small" for="autoScroll">Rolagem automática</label>
-    </div>
-
-    <div style="height:10px"></div>
-    <div class="small">Export e filtros para análise didática. Lembre: tudo é SIMULADO — sem captura oculta.</div>
   </aside>
 </div>
 
 <script>
-/* ---------- dados e utilitários ---------- */
+/* =========================
+   Dados e utilitários
+   ========================= */
 const APPS = ['WhatsApp','Chrome','Gmail','Instagram','Facebook','Telegram','Notas','BancoApp','Slack','Edge'];
 const USERS = ['Ana Silva','Bruno Costa','Carlos P.','Daniela S.','Eduardo L.','Fernanda R.','Gabriel M.','Helena A.','Igor R.','Juliana M.'];
-const SENSITIVE_WORDS = ['senha','cpf','cartão','token','1234','senha123','agência','conta'];
+const SENSITIVE = ['senha','cpf','cartão','token','1234','agência','conta','numero_cartao','senha123'];
 
-// tabela de logs (simulados)
-let logs = [];
+let logs = []; // newest first
+let autoTimer = null;
+let pruneTimer = null;
+let autoOn = true;
+let pruneOnOffline = true;
 
-/* DOM */
+/* DOM refs */
 const logBody = document.getElementById('logBody');
 const btnGenerate = document.getElementById('btnGenerate');
-const btnStartAuto = document.getElementById('btnStartAuto');
+const btnToggleAuto = document.getElementById('btnToggleAuto');
 const btnExport = document.getElementById('btnExport');
 const btnClear = document.getElementById('btnClear');
+const speedSelect = document.getElementById('speedSelect');
 const searchInput = document.getElementById('searchInput');
 const filterApp = document.getElementById('filterApp');
 const maskCheckbox = document.getElementById('maskSensitive');
+const barChartCanvas = document.getElementById('barChart');
+
 const voluntaryInput = document.getElementById('voluntaryInput');
+const volApp = document.getElementById('volApp');
+const volUser = document.getElementById('volUser');
 const btnAddVol = document.getElementById('btnAddVol');
-const speedSelect = document.getElementById('speedSelect');
 const includeSensitive = document.getElementById('includeSensitive');
-const autoScroll = document.getElementById('autoScroll');
+const pruneCheckbox = document.getElementById('pruneOnOffline');
+
 const statusDot = document.getElementById('statusDot');
+const statusLabel = document.getElementById('statusLabel');
 const timeLabel = document.getElementById('timeLabel');
 
-/* preencher filtro de apps */
-(function fillAppFilter(){
-  APPS.forEach(a=>{
-    const opt = document.createElement('option');
-    opt.value = a; opt.textContent = a;
-    filterApp.appendChild(opt);
-  });
-})();
+/* fill selects */
+APPS.forEach(a=>{
+  const o = document.createElement('option'); o.value=a; o.textContent=a; filterApp.appendChild(o);
+  const o2 = document.createElement('option'); o2.value=a; o2.textContent=a; volApp.appendChild(o2);
+});
+USERS.forEach(u=>{
+  const o = document.createElement('option'); o.value=u; o.textContent=u; volUser.appendChild(o);
+});
 
-/* utilities */
-function nowIso(){ return new Date().toLocaleString(); }
+/* helpers */
 function rnd(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
 function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function now(){ return new Date().toLocaleString(); }
 
-/* mask sensitive words (simulation) */
-function maskSensitiveText(text){
-  // substitui aparições das palavras sensíveis por **** (case-insensitive)
-  let masked = text;
-  SENSITIVE_WORDS.forEach(s=>{
-    const re = new RegExp(s,'ig');
-    masked = masked.replace(re, '••••');
+/* mask sensitive */
+function maskSensitive(text){
+  let t = text;
+  SENSITIVE.forEach(s=>{
+    t = t.replace(new RegExp(s,'ig'), '••••');
   });
-  return masked;
-}
-
-/* safe render of text for table (shorten) */
-function renderText(t){
-  const max = 80;
-  if(t.length > max) return t.slice(0, max-2) + '…';
   return t;
 }
 
-/* append log */
-function addLog({ts, app, user, text}){
-  const id = Date.now() + '-' + Math.random().toString(36).slice(2,8);
-  logs.unshift({id, ts, app, user, text}); // push to beginning (newest first)
-  refreshTable();
-}
-
-/* render table */
-function refreshTable(){
+/* render */
+function renderLogs(){
   const q = searchInput.value.trim().toLowerCase();
   const appFilter = filterApp.value;
   logBody.innerHTML = '';
   const mask = maskCheckbox.checked;
-  const rows = logs.filter(l=>{
-    if(appFilter && l.app !== appFilter) return false;
-    if(!q) return true;
-    return (l.user.toLowerCase().includes(q) || l.app.toLowerCase().includes(q) || l.text.toLowerCase().includes(q));
-  });
-  rows.forEach(l=>{
+  logs.forEach(l=>{
+    if(appFilter && l.app !== appFilter) return;
+    if(q && !(l.app.toLowerCase().includes(q) || l.user.toLowerCase().includes(q) || l.text.toLowerCase().includes(q))) return;
     const tr = document.createElement('tr');
-    const text = mask ? maskSensitiveText(l.text) : l.text;
-    tr.innerHTML = `<td style="white-space:nowrap;font-size:13px;color:var(--muted)">${l.ts}</td>
-                    <td style="font-weight:700">${l.app}</td>
-                    <td style="color:var(--muted)">${l.user}</td>
-                    <td><span class="keystext" title="${l.text}">${renderText(text)}</span></td>`;
+    const textDisplay = mask ? maskSensitive(l.text) : l.text;
+    tr.innerHTML = `
+      <td style="white-space:nowrap;color:var(--muted);font-size:13px">${l.ts}</td>
+      <td><span class="appTag">${emojiForApp(l.app)} ${l.app}</span></td>
+      <td><div class="userName">${l.user}</div></td>
+      <td><span class="keystext" title="${escapeHtml(l.text)}">${shorten(textDisplay,80)}</span></td>
+    `;
+    if(l.isNew) {
+      tr.classList.add('newRow');
+      setTimeout(()=> tr.classList.remove('newRow'), 1200);
+      delete l.isNew;
+    }
     logBody.appendChild(tr);
   });
-  if(autoScroll.checked){
-    // scroll to top behavior: newest at top — nothing needed; but if not empty, ensure view shows top
-    // we won't auto-scroll to bottom to avoid jumping.
-  }
+  updateChart();
 }
 
-/* ---------- generation of realistic entries ---------- */
-function makeRandomKeystroke(includeSensitive=false){
+/* short helpers */
+function shorten(s,n){ return s.length>n? s.slice(0,n-2)+'…': s; }
+function escapeHtml(s){ return (s+'').replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+/* emoji for app */
+function emojiForApp(a){
+  const map = {
+    'WhatsApp':'💬','Chrome':'🌐','Gmail':'✉️','Instagram':'📸','Facebook':'📘','Telegram':'📨',
+    'Notas':'📝','BancoApp':'🏦','Slack':'💼','Edge':'🧭'
+  };
+  return map[a] || '📱';
+}
+
+/* add log entry (newest first) */
+function addLog(entry, markNew=true){
+  const item = { ts: now(), app: entry.app, user: entry.user, text: entry.text };
+  if(markNew) item.isNew = true;
+  logs.unshift(item);
+  // keep a reasonable cap for memory (e.g., 600 entries)
+  if(logs.length > 800) logs = logs.slice(0,800);
+  renderLogs();
+}
+
+/* realistic text generator */
+const commons = [
+  "Chego em 10 minutos.",
+  "Pode me enviar o comprovante?",
+  "Ligarei depois da reunião.",
+  "Envia o relatório atualizado.",
+  "Onde estão as chaves?",
+  "Confirmo amanhã à tarde.",
+  "Não esqueça de assinar.",
+  "Me passa o número do cliente.",
+  "Tudo certo com o pedido?",
+  "Tem reunião às 15h."
+];
+const sensitiveSamples = [
+  "senha: 123456",
+  "cpf 123.456.789-00",
+  "cartão 4111 1111 1111 1111",
+  "token: 987654",
+  "agência 0001 conta 12345-6",
+  "senha123"
+];
+
+function makeRandomEntry(includeSensitive=false){
   const app = pick(APPS);
   const user = pick(USERS);
-  // assemble plausible texts:
-  const common = [
-    "Olá, vou chegar em 10 minutos.",
-    "Confirmando reunião para amanhã às 14h.",
-    "Não esquece de assinar o contrato.",
-    "Pode me enviar o número do cliente?",
-    "Passa o PIX quando puder.",
-    "Vamos almoçar hoje?",
-    "Recebi o documento, obrigado.",
-    "Está tudo certo com o pedido.",
-    "Te ligo daqui a pouco.",
-    "Onde deixei as chaves?"
-  ];
-  const sensitiveExamples = [
-    "senha: 123456",
-    "senha123",
-    "cpf 123.456.789-00",
-    "cartão 4111 1111 1111 1111",
-    "token: 987654",
-    "agência 0001 conta 12345-6"
-  ];
   let text;
   if(includeSensitive && Math.random() < 0.18){
-    text = pick(sensitiveExamples);
+    text = pick(sensitiveSamples);
   } else {
-    // sometimes combine short phrases to seem real
-    text = pick(common);
-    if(Math.random() < 0.25) text += ' ' + pick(common);
+    text = pick(commons);
+    if(Math.random() < 0.25) text += ' ' + pick(commons);
+    // add small natural fillers sometimes
+    if(Math.random() < 0.35) text = (Math.random()<0.5? 'OK, ' : '') + text;
   }
-  return { app, user, text, ts: nowIso() };
+  return { app, user, text };
 }
 
-/* public controls */
-btnGenerate.addEventListener('click', ()=>{
-  // generate between 5 and 12 entries to look real
-  const n = rnd(5,12);
-  for(let i=0;i<n;i++){
-    const e = makeRandomKeystroke(includeSensitive.checked);
-    addLog(e);
-  }
-});
-
-/* auto generator */
-let autoTimer = null;
-let autoOn = true;
+/* auto generation */
 function startAuto(){
-  if(autoTimer) clearInterval(autoTimer);
+  stopAuto();
+  autoOn = true;
+  document.getElementById('btnToggleAuto').textContent = 'Auto: ON';
+  document.getElementById('btnToggleAuto').classList.remove('ghost'); document.getElementById('btnToggleAuto').classList.add('btn');
   const speed = parseInt(speedSelect.value,10) || 2500;
   autoTimer = setInterval(()=>{
-    const entry = makeRandomKeystroke(includeSensitive.checked);
-    addLog(entry);
+    const e = makeRandomEntry(includeSensitive.checked);
+    addLog(e);
   }, speed);
-  autoOn = true;
-  btnStartAuto.textContent = 'Auto (on)';
-  btnStartAuto.classList.remove('ghost'); btnStartAuto.classList.add('btn');
 }
 function stopAuto(){
   if(autoTimer) clearInterval(autoTimer);
   autoTimer = null;
   autoOn = false;
-  btnStartAuto.textContent = 'Auto (off)';
-  btnStartAuto.classList.remove('btn'); btnStartAuto.classList.add('btn','ghost');
+  document.getElementById('btnToggleAuto').textContent = 'Auto: OFF';
+  document.getElementById('btnToggleAuto').classList.remove('btn'); document.getElementById('btnToggleAuto').classList.add('ghost');
 }
-btnStartAuto.addEventListener('click', ()=>{
+
+/* generate burst */
+btnGenerate.addEventListener('click', ()=>{
+  const n = rnd(6,14);
+  for(let i=0;i<n;i++){
+    const e = makeRandomEntry(includeSensitive.checked);
+    addLog(e);
+  }
+});
+
+/* toggle auto */
+document.getElementById('btnToggleAuto').addEventListener('click', ()=>{
   if(autoOn) stopAuto(); else startAuto();
-});
-startAuto(); // initial state on
-
-/* voluntary input */
-btnAddVol.addEventListener('click', ()=>{
-  const t = voluntaryInput.value.trim();
-  if(!t) { alert('Digite algo na área de teste para adicionar um registro.'); return; }
-  const app = prompt('Informe o app/janela onde isto foi digitado (ex: WhatsApp, Chrome):','Notas') || 'Notas';
-  const user = prompt('Nome do usuário associado (opcional):', pick(USERS)) || pick(USERS);
-  addLog({ ts: nowIso(), app, user, text: t });
-  voluntaryInput.value = '';
-});
-
-/* search and filters */
-searchInput.addEventListener('input', ()=> refreshTable());
-filterApp.addEventListener('change', ()=> refreshTable());
-maskCheckbox.addEventListener('change', ()=> refreshTable());
-speedSelect.addEventListener('change', ()=>{
-  if(autoOn){ startAuto(); } // restart with new speed
 });
 
 /* export CSV */
 btnExport.addEventListener('click', ()=>{
   if(!logs.length){ alert('Sem registros para exportar.'); return; }
-  const rows = [['ts','app','user','text']];
-  // export visible rows only (after filter/search)
-  const q = searchInput.value.trim().toLowerCase();
-  const appFilter = filterApp.value;
-  logs.forEach(l=>{
-    if(appFilter && l.app !== appFilter) return;
-    if(q && !(l.user.toLowerCase().includes(q) || l.app.toLowerCase().includes(q) || l.text.toLowerCase().includes(q))) return;
-    rows.push([`"${l.ts}"`,`"${l.app}"`,`"${l.user}"`,`"${l.text.replace(/"/g,'""')}"`]);
-  });
+  const rows=[['ts','app','user','text']];
+  logs.forEach(l=> rows.push([`"${l.ts}"`,`"${l.app}"`,`"${l.user}"`,`"${l.text.replace(/"/g,'""')}"`]));
   const csv = rows.map(r=>r.join(',')).join('\n');
-  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'teclado_simulado.csv';
-  document.body.appendChild(a); a.click(); a.remove();
-  URL.revokeObjectURL(url);
+  const a = document.createElement('a'); a.href=url; a.download='teclado_simulado.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
 });
 
 /* clear */
 btnClear.addEventListener('click', ()=>{
-  if(!confirm('Limpar todos os registros simulados?')) return;
-  logs = [];
-  refreshTable();
+  if(!confirm('Apagar todos os registros simulados?')) return;
+  logs = []; renderLogs();
 });
 
-/* initial demo data so page looks populated */
-(function seedInitial(){
-  for(let i=0;i<12;i++){
-    const e = makeRandomKeystroke(true);
-    logs.push({ id: i, ts: e.ts, app: e.app, user: e.user, text: e.text });
+/* add voluntary */
+btnAddVol.addEventListener('click', ()=>{
+  const t = voluntaryInput.value.trim();
+  if(!t){ alert('Digite algo antes de adicionar.'); return; }
+  const a = volApp.value || pick(APPS);
+  const u = volUser.value || pick(USERS);
+  addLog({ app:a, user:u, text:t });
+  voluntaryInput.value = '';
+});
+
+/* search/filter/mask handlers */
+searchInput.addEventListener('input', ()=> renderLogs());
+filterApp.addEventListener('change', ()=> renderLogs());
+maskCheckbox.addEventListener('change', ()=> renderLogs());
+includeSensitive.addEventListener('change', ()=> {/* no-op; used on generation */});
+
+/* chart implementation (simple canvas) */
+const chartCtx = barChartCanvas.getContext('2d');
+function updateChart(){
+  const counts = {};
+  APPS.forEach(a=> counts[a]=0);
+  // take last N logs visible (respect filter/search)
+  const q = searchInput.value.trim().toLowerCase();
+  const appFilter = filterApp.value;
+  const visible = logs.filter(l=>{
+    if(appFilter && l.app!==appFilter) return false;
+    if(q && !(l.app.toLowerCase().includes(q) || l.user.toLowerCase().includes(q) || l.text.toLowerCase().includes(q))) return false;
+    return true;
+  }).slice(0,200); // limit window
+  visible.forEach(l=> counts[l.app] = (counts[l.app]||0)+1);
+  // draw bars
+  const W = barChartCanvas.width = barChartCanvas.clientWidth;
+  const H = barChartCanvas.height = 140;
+  chartCtx.clearRect(0,0,W,H);
+  const apps = APPS.slice();
+  const max = Math.max(1, ...apps.map(a=>counts[a]));
+  const pad = 8;
+  const bw = (W - pad*2) / apps.length;
+  apps.forEach((a,i)=>{
+    const v = counts[a];
+    const h = Math.round((v / max) * (H - 24));
+    const x = pad + i * bw + bw*0.12;
+    const barw = bw*0.76;
+    // gradient
+    const g = chartCtx.createLinearGradient(x, H-h, x+barw, H);
+    g.addColorStop(0, 'rgba(229,9,20,0.95)');
+    g.addColorStop(1, 'rgba(255,120,120,0.6)');
+    chartCtx.fillStyle = g;
+    chartCtx.fillRect(x, H-h-8, barw, h+8);
+    // label
+    chartCtx.fillStyle = 'rgba(255,255,255,0.75)';
+    chartCtx.font = '11px system-ui, Arial';
+    chartCtx.fillText(a, x, H-2);
+  });
+}
+
+/* new row highlight handled in renderLogs */
+
+/* online/offline behaviour: pause auto and start prune */
+function goOffline(){
+  statusDot.style.background = '#e50914';
+  statusDot.style.boxShadow = '0 0 8px rgba(229,9,20,0.7)';
+  statusLabel.textContent = 'Offline';
+  // stop auto
+  stopAuto();
+  // if prune enabled, start removing oldest entries gradually
+  if(pruneCheckbox.checked){
+    if(pruneTimer) clearInterval(pruneTimer);
+    pruneTimer = setInterval(()=>{
+      if(logs.length>0){
+        logs.pop(); // remove oldest
+        renderLogs();
+      }
+    }, 2000);
   }
-  refreshTable();
-})();
+}
+function goOnline(){
+  statusDot.style.background = 'var(--green)';
+  statusDot.style.boxShadow = '0 0 8px rgba(126,217,87,0.85)';
+  statusLabel.textContent = 'Online';
+  // stop prune
+  if(pruneTimer){ clearInterval(pruneTimer); pruneTimer = null; }
+  // resume auto if it was on before
+  if(autoOn === false && document.getElementById('btnToggleAuto').textContent.includes('ON')) {
+    // inconsistent state fix
+    startAuto();
+  } else {
+    // if toggle shows ON, ensure auto runs
+    if(document.getElementById('btnToggleAuto').textContent.includes('ON')) startAuto();
+  }
+}
 
-/* keep time label updated */
-setInterval(()=>{ timeLabel.textContent = new Date().toLocaleTimeString(); }, 1000);
+/* listen to navigator online */
+window.addEventListener('online', ()=>{ goOnline(); });
+window.addEventListener('offline', ()=>{ goOffline(); });
+/* initialize based on current state */
+if(navigator.onLine) goOnline(); else goOffline();
 
-/* accessibility: keyboard triggers */
-document.addEventListener('keydown', (e)=>{
-  // ctrl+g = gerar, ctrl+a = toggle auto, ctrl+e = export
-  if(e.ctrlKey && e.key.toLowerCase() === 'g'){ e.preventDefault(); btnGenerate.click(); }
-  if(e.ctrlKey && e.key.toLowerCase() === 'a'){ e.preventDefault(); btnStartAuto.click(); }
-  if(e.ctrlKey && e.key.toLowerCase() === 'e'){ e.preventDefault(); btnExport.click(); }
+/* keep clock */
+setInterval(()=>{ timeLabel.textContent = new Date().toLocaleTimeString(); },1000);
+
+/* auto-start and seed */
+function seedInitial(){
+  for(let i=0;i<14;i++){
+    const e = makeRandomEntry(true);
+    logs.push({ ts: now(), app:e.app, user:e.user, text:e.text });
+  }
+  // ensure newest at top
+  logs = logs.reverse();
+  renderLogs();
+}
+seedInitial();
+startAuto();
+
+/* auto toggle/resume behavior note:
+   we store autoOn variable; when user toggles we set autoOn false and stop auto;
+   when offline occurs we stopAuto (but preserve autoOn state), and when online we resume only if the toggle indicates ON.
+*/
+document.getElementById('btnToggleAuto').addEventListener('click', ()=>{
+  if(autoOn){
+    stopAuto();
+    autoOn = false;
+  } else {
+    startAuto();
+    autoOn = true;
+  }
 });
-</script>
 
+/* speed changes apply immediately */
+speedSelect.addEventListener('change', ()=>{
+  if(autoOn) startAuto();
+});
+
+/* search/filter live */
+searchInput.addEventListener('input', renderLogs);
+filterApp.addEventListener('change', renderLogs);
+maskCheckbox.addEventListener('change', renderLogs);
+pruneCheckbox.addEventListener('change', ()=>{
+  if(!pruneCheckbox.checked && pruneTimer){ clearInterval(pruneTimer); pruneTimer=null; }
+});
+
+/* helpers for UI niceties */
+function updateFilterList(){ /* no-op, filter already filled */ }
+updateFilterList();
+
+/* keyboard shortcuts: ctrl+g generate, ctrl+a toggle auto, ctrl+e export */
+document.addEventListener('keydown',(e)=>{
+  if(e.ctrlKey && e.key.toLowerCase()==='g'){ e.preventDefault(); btnGenerate.click(); }
+  if(e.ctrlKey && e.key.toLowerCase()==='a'){ e.preventDefault(); document.getElementById('btnToggleAuto').click(); }
+  if(e.ctrlKey && e.key.toLowerCase()==='e'){ e.preventDefault(); btnExport.click(); }
+});
+
+/* small visual: when new rows are added frequently, keep chart updated every 1s */
+setInterval(()=> updateChart(), 1000);
+
+/* ensure render initially */
+renderLogs();
+
+</script>
 </body>
 </html>
