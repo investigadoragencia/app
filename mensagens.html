@@ -3,27 +3,90 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Mensagens — App AI (Demo)</title>
+<title>Mensagens — Investigador AI</title>
 <style>
-:root{--bg:#000;--accent:#e50914;--muted:#9aa3ad;font-family:"Poppins",system-ui,Roboto,Arial;}
+:root{
+  --bg:#000;
+  --accent:#e50914;
+  --muted:#9aa3ad;
+  --card:#0f0f10;
+  font-family:"Poppins",system-ui,Roboto,Arial;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:14px}
-.header{width:100%;max-width:420px;display:flex;align-items:center;gap:8px;margin-bottom:10px}
+body{
+  background:var(--bg);
+  color:#fff;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:14px;
+}
+.header{
+  width:100%;
+  max-width:420px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:10px;
+}
 .back{color:var(--muted);cursor:pointer}
 .logo{margin:0 auto;width:64px;height:64px;object-fit:contain}
-.container{width:100%;max-width:420px;background:#0f0f10;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 10px 30px rgba(229,9,20,0.06)}
-.title{color:var(--accent);font-weight:700;margin-bottom:8px}
-.selector{display:flex;gap:8px;margin-bottom:8px}
-.btn{background:var(--accent);color:#fff;padding:8px 10px;border-radius:8px;border:none;cursor:pointer}
+.container{
+  width:100%;
+  max-width:420px;
+  background:var(--card);
+  padding:12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.03);
+  box-shadow:0 10px 30px rgba(229,9,20,0.06);
+}
+
+/* Lista de contatos */
+.contact-list .item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 0;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  cursor:pointer;
+}
+.contact-list img{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  object-fit:cover;
+}
+.contact-list .info{flex:1}
+.contact-list .name{font-weight:600}
+.contact-list .last{
+  font-size:12px;
+  color:var(--muted);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.contact-list .time{font-size:11px;color:var(--muted)}
+
+/* Chat */
 .chat{max-height:60vh;overflow:auto;padding-right:6px}
 .msg{margin:10px 0;display:flex;flex-direction:column;gap:4px}
-.msg .bubble{padding:10px 12px;border-radius:12px;max-width:82%;font-size:14px}
+.msg .bubble{padding:10px 12px;border-radius:12px;max-width:82%;font-size:14px;word-wrap:break-word;}
 .msg.sent .bubble{background:var(--accent);align-self:flex-end;color:#fff}
 .msg.received .bubble{background:rgba(255,255,255,0.06);align-self:flex-start;color:#fff}
 .time{font-size:11px;color:var(--muted);align-self:flex-end}
 .footer{display:flex;gap:8px;margin-top:10px}
-.input{flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:#0b0b0b;color:#fff}
+.input{
+  flex:1;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,0.04);
+  background:#0b0b0b;
+  color:#fff;
+}
+.btn{background:var(--accent);color:#fff;padding:8px 10px;border-radius:8px;border:none;cursor:pointer}
 .small{font-size:12px;color:var(--muted);text-align:center;margin-top:8px}
+.hidden{display:none}
 </style>
 </head>
 <body>
@@ -34,72 +97,132 @@ body{background:var(--bg);color:#fff;min-height:100vh;display:flex;flex-directio
 </div>
 
 <div class="container">
-  <div class="title" id="title">Mensagens</div>
 
-  <div class="selector">
-    <button class="btn" onclick="loadType('sms')">SMS</button>
-    <button class="btn" onclick="loadType('whatsapp')">WhatsApp</button>
+  <!-- LISTA DE CONTATOS -->
+  <div id="contactList" class="contact-list"></div>
+
+  <!-- CHAT INDIVIDUAL -->
+  <div id="chatView" class="hidden">
+    <div class="header" style="justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="back" onclick="abrirLista()">←</div>
+        <div id="chatName" style="font-weight:600;"></div>
+      </div>
+      <div id="status" style="font-size:12px;color:#7ed957;">● Online</div>
+    </div>
+    <div class="chat" id="chatBox"></div>
+    <div class="footer">
+      <input id="inp" class="input" placeholder="Mensagem..."/>
+      <button class="btn" onclick="enviar()">Enviar</button>
+    </div>
   </div>
 
-  <div class="chat" id="chatBox" aria-live="polite"></div>
-
-  <div class="footer">
-    <input id="inp" class="input" placeholder="Escreva uma mensagem (demo)"/>
-    <button class="btn" onclick="enviar()">Enviar</button>
-  </div>
-
-  <div class="small">Demonstração — mensagens fictícias geradas localmente.</div>
 </div>
 
 <script>
-function voltar(){ location.href='dashboard.html'; }
-function getQuery(){ const q={}; location.search.replace(/^\?/,'').split('&').forEach(p=>{ if(!p) return; const [k,v]=p.split('='); q[decodeURIComponent(k)]=v?decodeURIComponent(v):''; }); return q; }
-
-const samples = [
-  "Oi, tudo bem?",
-  "Chego em 10 min",
-  "Pode me enviar o endereço?",
-  "Confirmado, obrigado!",
-  "Vamos naquele horário então",
-  "Vi sua mensagem, respondo já",
-  "Tá ótimo 👍"
+const contatos = [
+  {nome:'Ana Souza', foto:'https://i.pravatar.cc/100?img=1'},
+  {nome:'Bruno Silva', foto:'https://i.pravatar.cc/100?img=2'},
+  {nome:'Carla Mendes', foto:'https://i.pravatar.cc/100?img=3'},
+  {nome:'Diego Costa', foto:'https://i.pravatar.cc/100?img=4'},
+  {nome:'Fernanda Lima', foto:'https://i.pravatar.cc/100?img=5'},
+  {nome:'João Pedro', foto:'https://i.pravatar.cc/100?img=6'},
+  {nome:'Lucas Oliveira', foto:'https://i.pravatar.cc/100?img=7'},
+  {nome:'Mariana Torres', foto:'https://i.pravatar.cc/100?img=8'}
 ];
 
-const chatBox = document.getElementById('chatBox');
-let mode = 'sms';
+const mensagensDemo = [
+  "Oi, tudo bem?",
+  "Tá ocupado agora?",
+  "Chego em 10 min",
+  "Pode me mandar o endereço?",
+  "Tô vendo aqui no app 😅",
+  "Beleza, valeu!",
+  "Até logo 👋"
+];
 
-function addMessage(text, type){
-  const div=document.createElement('div'); div.className='msg '+(type==='sent'?'sent':'received');
-  const b=document.createElement('div'); b.className='bubble'; b.textContent=text;
-  const t=document.createElement('div'); t.className='time'; t.textContent=new Date().toLocaleTimeString();
-  div.appendChild(b); div.appendChild(t); chatBox.appendChild(div); chatBox.scrollTop = chatBox.scrollHeight;
+const list = document.getElementById('contactList');
+const chatBox = document.getElementById('chatBox');
+const chatView = document.getElementById('chatView');
+const contactList = document.getElementById('contactList');
+const chatName = document.getElementById('chatName');
+
+function voltar(){ location.href='dashboard.html'; }
+
+// monta a lista de contatos
+function montarLista(){
+  contatos.forEach(c=>{
+    const div=document.createElement('div');
+    div.className='item';
+    const ultima = mensagensDemo[Math.floor(Math.random()*mensagensDemo.length)];
+    const hora = new Date(Date.now()-Math.random()*3.6e6).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+    div.innerHTML=`
+      <img src="${c.foto}" alt="${c.nome}">
+      <div class="info">
+        <div class="name">${c.nome}</div>
+        <div class="last">${ultima}</div>
+      </div>
+      <div class="time">${hora}</div>
+    `;
+    div.onclick=()=>abrirChat(c);
+    list.appendChild(div);
+  });
 }
 
-function gerar(qtd){
+function abrirChat(c){
+  contactList.classList.add('hidden');
+  chatView.classList.remove('hidden');
+  chatName.textContent=c.nome;
+  gerarConversas();
+}
+
+function abrirLista(){
+  chatView.classList.add('hidden');
+  contactList.classList.remove('hidden');
+}
+
+function addMessage(text, type){
+  const div=document.createElement('div');
+  div.className='msg '+(type==='sent'?'sent':'received');
+  const b=document.createElement('div');
+  b.className='bubble'; b.textContent=text;
+  const t=document.createElement('div');
+  t.className='time'; t.textContent=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  div.appendChild(b); div.appendChild(t);
+  chatBox.appendChild(div);
+  chatBox.scrollTop=chatBox.scrollHeight;
+}
+
+function gerarConversas(){
   chatBox.innerHTML='';
+  const qtd = Math.floor(Math.random()*6)+5;
   for(let i=0;i<qtd;i++){
-    const txt = samples[Math.floor(Math.random()*samples.length)];
-    addMessage(txt, i%2? 'received' : 'sent');
+    const txt = mensagensDemo[Math.floor(Math.random()*mensagensDemo.length)];
+    addMessage(txt, i%2?'received':'sent');
   }
 }
 
-function loadType(t){
-  mode=t;
-  document.getElementById('title').textContent = (t==='whatsapp' ? 'WhatsApp — Conversa' : 'SMS — Conversa');
-  gerar(Math.floor(Math.random()*6)+4);
-}
-
 function enviar(){
-  const v = document.getElementById('inp').value.trim();
-  if(!v) return;
-  addMessage(v,'sent'); document.getElementById('inp').value='';
-  // resposta automática demo
-  setTimeout(()=> addMessage(samples[Math.floor(Math.random()*samples.length)], 'received'), 800 + Math.random()*1500);
+  const v=document.getElementById('inp').value.trim();
+  if(!v)return;
+  addMessage(v,'sent');
+  document.getElementById('inp').value='';
+  setTimeout(()=> addMessage(mensagensDemo[Math.floor(Math.random()*mensagensDemo.length)],'received'),1000+Math.random()*1500);
 }
 
-// init from query
-const q = getQuery();
-if(q.type === 'whatsapp'){ loadType('whatsapp'); } else { loadType(q.type || 'sms'); }
+// simula online/offline
+setInterval(()=>{
+  const st=document.getElementById('status');
+  if(Math.random()<0.1){
+    st.textContent='● Offline';
+    st.style.color='#e50914';
+  } else {
+    st.textContent='● Online';
+    st.style.color='#7ed957';
+  }
+},4000);
+
+montarLista();
 </script>
 </body>
 </html>
