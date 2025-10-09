@@ -3,96 +3,248 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mockup — agenciainvestigador</title>
+<title>@agenciainvestigador — Instagram Demo</title>
 <style>
 :root {
   --bg: #fff;
   --accent: #262626;
   --muted: #8a8f95;
-  --instagram-gradient: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  --gradient: conic-gradient(from 180deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
 }
-* { box-sizing: border-box; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: system-ui, Arial, sans-serif;
-  margin: 0;
   background: var(--bg);
   color: var(--accent);
 }
-.wrap { max-width: 980px; margin: 24px auto; padding: 24px; }
-.profile { display: flex; gap: 24px; align-items: center; }
-.avatar {
-  width: 140px; height: 140px; border-radius: 50%; overflow: hidden;
-  border: 3px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.1);
+.container {
+  max-width: 935px;
+  margin: 0 auto;
+  padding: 24px 16px;
 }
-.avatar img { width: 100%; height: 100%; object-fit: cover; }
-.meta h1 { font-size: 20px; margin: 0; }
-.meta .handle { color: var(--muted); margin: 6px 0; }
-.stats { display: flex; gap: 18px; font-weight: 600; margin: 8px 0; }
-.stats div span { display: block; font-size: 14px; }
-.bio { color: var(--muted); line-height: 1.4; }
-.actions { margin-top: 12px; display: flex; gap: 8px; }
-.btn { padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; background: #fff; cursor: pointer; }
-.btn.primary { background: var(--instagram-gradient); color: #fff; border: 0; }
-.highlights { display: flex; gap: 12px; margin: 18px 0; flex-wrap: wrap; }
-.hl { width: 72px; text-align: center; }
-.hl .circle { width: 72px; height: 72px; border-radius: 50%; overflow: hidden; border: 2px solid #eee; }
-.hl img { width: 100%; height: 100%; object-fit: cover; }
-.hl p { font-size: 12px; color: var(--muted); margin: 6px 0 0; }
-.controls { display: flex; align-items: center; border-top: 1px solid #eee; padding-top: 12px; margin-top: 12px; }
-.grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; margin-top: 12px; }
-.post { position: relative; overflow: hidden; padding-top: 100%; background: #eee; }
-.post img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-@media (max-width:640px) {
-  .avatar { width: 96px; height: 96px; }
-  .grid { grid-template-columns: repeat(3, 1fr); }
+
+/* ---- TOPO DO PERFIL ---- */
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+.profile-pic-wrapper {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: var(--gradient);
+  padding: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.profile-pic {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.profile-pic img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-info {
+  flex: 1;
+}
+.profile-info h1 {
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.profile-info .handle { color: var(--muted); font-size: 14px; margin-top: 4px; }
+.profile-stats {
+  display: flex;
+  gap: 30px;
+  margin: 16px 0;
+}
+.profile-stats div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: 600;
+}
+.profile-stats small { font-weight: normal; color: var(--muted); }
+
+.bio {
+  font-size: 14px;
+  color: var(--accent);
+  line-height: 1.4;
+}
+.actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 8px;
+}
+.btn {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fafafa;
+  cursor: pointer;
+}
+.btn:hover { background: #efefef; }
+
+/* ---- DESTAQUES ---- */
+.highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 28px 0;
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
+}
+.hl {
+  width: 86px;
+  text-align: center;
+}
+.hl .outer {
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  background: var(--gradient);
+  padding: 3px;
+}
+.hl .inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #fff;
+}
+.hl img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hl p {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+/* ---- FEED ---- */
+.feed-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  padding: 12px 0;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.feed-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+.feed-item {
+  position: relative;
+  padding-top: 100%;
+  overflow: hidden;
+}
+.feed-item img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform .3s ease;
+}
+.feed-item:hover img { transform: scale(1.05); }
+
+@media (max-width: 700px) {
+  .profile { flex-direction: column; align-items: center; text-align: center; }
+  .profile-pic-wrapper { width: 120px; height: 120px; }
+  .profile-stats { justify-content: center; }
 }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="profile">
-    <div class="avatar">
-      <img src="https://picsum.photos/400?random=10" alt="Foto de perfil">
-    </div>
-    <div class="meta">
-      <h1>Investigador</h1>
-      <div class="handle">@agenciainvestigador</div>
-      <div class="stats">
-        <div><span>136</span><small>publicações</small></div>
-        <div><span>4,5k</span><small>seguidores</small></div>
-        <div><span>120</span><small>seguindo</small></div>
+  <div class="container">
+    <div class="profile">
+      <div class="profile-pic-wrapper">
+        <div class="profile-pic">
+          <img src="https://picsum.photos/400?random=7" alt="Foto de perfil">
+        </div>
       </div>
-      <div class="bio">Proteja sua privacidade e descubra a verdade. A Agência Investigador atua com tecnologia, ética e total sigilo.</div>
-      <div class="actions">
-        <button class="btn primary">Seguir</button>
-        <button class="btn">Mensagem</button>
+      <div class="profile-info">
+        <h1>Investigador <button class="btn">Seguir</button></h1>
+        <div class="handle">@agenciainvestigador</div>
+        <div class="profile-stats">
+          <div><span>136</span><small>publicações</small></div>
+          <div><span>4,5k</span><small>seguidores</small></div>
+          <div><span>120</span><small>seguindo</small></div>
+        </div>
+        <div class="bio">
+          🔎 Agência especializada em <strong>investigação digital e privada</strong>.<br>
+          Proteja sua privacidade e descubra a verdade.<br>
+          📍 Brasil | Atendimento 24h
+        </div>
+        <div class="actions">
+          <button class="btn">Mensagem</button>
+          <button class="btn">Contato</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="highlights">
-    <div class="hl"><div class="circle"><img src="https://picsum.photos/200?random=1" alt=""></div><p>Casos</p></div>
-    <div class="hl"><div class="circle"><img src="https://picsum.photos/200?random=2" alt=""></div><p>Serviços</p></div>
-    <div class="hl"><div class="circle"><img src="https://picsum.photos/200?random=3" alt=""></div><p>Equipe</p></div>
-    <div class="hl"><div class="circle"><img src="https://picsum.photos/200?random=4" alt=""></div><p>Provas</p></div>
-  </div>
+    <!-- DESTAQUES -->
+    <div class="highlights">
+      <div class="hl">
+        <div class="outer"><div class="inner"><img src="https://picsum.photos/200?random=1"></div></div>
+        <p>Serviços</p>
+      </div>
+      <div class="hl">
+        <div class="outer"><div class="inner"><img src="https://picsum.photos/200?random=2"></div></div>
+        <p>Casos</p>
+      </div>
+      <div class="hl">
+        <div class="outer"><div class="inner"><img src="https://picsum.photos/200?random=3"></div></div>
+        <p>Equipe</p>
+      </div>
+      <div class="hl">
+        <div class="outer"><div class="inner"><img src="https://picsum.photos/200?random=4"></div></div>
+        <p>Provas</p>
+      </div>
+    </div>
 
-  <div class="controls">
-    <div style="font-weight:600">Publicações</div>
-    <div style="margin-left:auto;color:var(--muted)">Ordenar: Mais recentes</div>
-  </div>
+    <!-- FEED -->
+    <div class="feed-controls">
+      <div>Publicações</div>
+      <div>Reels</div>
+      <div>Marcados</div>
+    </div>
 
-  <div class="grid">
-    <div class="post"><img src="https://picsum.photos/600?random=11" alt=""></div>
-    <div class="post"><img src="https://picsum.photos/600?random=12" alt=""></div>
-    <div class="post"><img src="https://picsum.photos/600?random=13" alt=""></div>
-    <div class="post"><img src="https://picsum.photos/600?random=14" alt=""></div>
-    <div class="post"><img src="https://picsum.photos/600?random=15" alt=""></div>
-    <div class="post"><img src="https://picsum.photos/600?random=16" alt=""></div>
-    <div class="post"><img src="https://picsum.photos/600?random=17" alt=""></div>
-    <div class="post"><img src="https://picsum.photos/600?random=18" alt=""></div>
-    <div class="post"><img src="https://picsum.photos/600?random=19" alt=""></div>
+    <div class="feed-grid">
+      <div class="feed-item"><img src="https://picsum.photos/600?random=10"></div>
+      <div class="feed-item"><img src="https://picsum.photos/600?random=11"></div>
+      <div class="feed-item"><img src="https://picsum.photos/600?random=12"></div>
+      <div class="feed-item"><img src="https://picsum.photos/600?random=13"></div>
+      <div class="feed-item"><img src="https://picsum.photos/600?random=14"></div>
+      <div class="feed-item"><img src="https://picsum.photos/600?random=15"></div>
+      <div class="feed-item"><img src="https://picsum.photos/600?random=16"></div>
+      <div class="feed-item"><img src="https://picsum.photos/600?random=17"></div>
+      <div class="feed-item"><img src="https://picsum.photos/600?random=18"></div>
+    </div>
   </div>
-</div>
 </body>
 </html>
