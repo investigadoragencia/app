@@ -22,7 +22,6 @@
     min-height: 100vh;
   }
 
-  /* Cabeçalho */
   header {
     background: #fff;
     padding: 18px 20px 10px;
@@ -35,11 +34,7 @@
   header h1 { font-size: 24px; margin-bottom: 4px; }
   header p { color: var(--muted); font-size: 14px; }
 
-  /* Lista */
-  .list {
-    flex: 1;
-    overflow-y: auto;
-  }
+  .list { flex: 1; overflow-y: auto; }
   .msg {
     background: #fff;
     display: flex;
@@ -49,14 +44,17 @@
     cursor: pointer;
   }
   .avatar {
-    width: 44px; height: 44px;
+    width: 46px; height: 46px;
     border-radius: 50%;
-    background: #ccc;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
     color: #fff;
-    font-size: 18px;
+    font-size: 16px;
     margin-right: 12px;
+    flex-shrink: 0;
+    text-transform: uppercase;
   }
   .msg:nth-child(odd) .avatar { background: #1976d2; }
   .msg:nth-child(even) .avatar { background: #673ab7; }
@@ -65,11 +63,15 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
   }
   .info .name {
     font-weight: 600;
     font-size: 15px;
     margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .info .preview {
     color: var(--muted);
@@ -77,11 +79,11 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 90%;
   }
   .time {
     font-size: 12px;
     color: var(--muted);
+    text-align: right;
   }
   .badge {
     background: var(--accent);
@@ -90,10 +92,10 @@
     border-radius: 50%;
     width: 20px; height: 20px;
     display: flex; align-items: center; justify-content: center;
-    margin-left: 8px;
+    margin-top: 6px;
+    margin-left: auto;
   }
 
-  /* Rodapé */
   footer {
     display: flex;
     justify-content: space-around;
@@ -111,7 +113,6 @@
     font-weight: 600;
   }
 
-  /* Botão flutuante */
   .fab {
     position: fixed;
     bottom: 70px;
@@ -155,28 +156,29 @@
 const mensagens = [
   { nome: "6441", texto: "Tim: Jose, notamos que o pgto da sua fatura está em aberto no valor R$32,99.", hora: "17:28", qtd: 20 },
   { nome: "100", texto: "TIM Recado: Você tem um novo recado. Ligue *100 para ouvir.", hora: "16:02", qtd: 18 },
-  { nome: "TIMHBO", texto: "Assine HBO Max pela TIM e aproveite lançamentos exclusivos!", hora: "15:01", qtd: 7 },
-  { nome: "TIMYouTube", texto: "Benefício não utilizado: 2 meses de YouTube Premium por conta da TIM!", hora: "13:42", qtd: 3 },
-  { nome: "MercadoPago", texto: "Compra de R$ 89,90 aprovada no cartão final 2032.", hora: "13:03", qtd: 2 },
+  { nome: "TIM HBO", texto: "Assine HBO Max pela TIM e aproveite lançamentos exclusivos!", hora: "15:01", qtd: 7 },
+  { nome: "TIM YouTube", texto: "Benefício não utilizado: 2 meses de YouTube Premium!", hora: "13:42", qtd: 3 },
+  { nome: "Mercado Pago", texto: "Compra de R$ 89,90 aprovada no cartão final 2032.", hora: "13:03", qtd: 2 },
   { nome: "Nubank", texto: "Fatura fechada no valor de R$ 732,10 com vencimento em 15/10.", hora: "12:58", qtd: 1 },
   { nome: "Google", texto: "Seu código de verificação é 593821.", hora: "12:02", qtd: 1 },
   { nome: "Instagram", texto: "Use o código 392140 para confirmar seu login.", hora: "11:46", qtd: 1 },
-  { nome: "Claro", texto: "Você tem 2GB de bônus de internet disponíveis até 10/10.", hora: "11:30", qtd: 4 },
+  { nome: "Claro", texto: "Você tem 2GB de bônus de internet até 10/10.", hora: "11:30", qtd: 4 },
   { nome: "Correios", texto: "Sua encomenda foi entregue com sucesso.", hora: "10:55", qtd: 1 },
   { nome: "Banco do Brasil", texto: "Pagamento de R$ 412,50 confirmado.", hora: "10:12", qtd: 2 },
   { nome: "Pix", texto: "Você recebeu R$ 250,00 via Pix de João M.", hora: "09:54", qtd: 1 },
   { nome: "99App", texto: "Seu motorista chegou! Placa ABC1D23.", hora: "09:03", qtd: 1 },
-  { nome: "Netflix", texto: "Nova série disponível: 'Round 6 Temporada 2'.", hora: "08:46", qtd: 1 },
+  { nome: "Netflix", texto: "Nova série disponível: Round 6 Temporada 2.", hora: "08:46", qtd: 1 },
   { nome: "Shopee", texto: "Pedido #43921 saiu para entrega.", hora: "07:35", qtd: 3 },
   { nome: "Amazon", texto: "Seu pedido foi despachado!", hora: "06:44", qtd: 1 }
 ];
 
 const list = document.getElementById("smsList");
 mensagens.forEach(m => {
+  const iniciais = m.nome.split(" ").map(w => w[0]).join("").slice(0,2).toUpperCase();
   const div = document.createElement("div");
   div.className = "msg";
   div.innerHTML = `
-    <div class="avatar">${m.nome[0]}</div>
+    <div class="avatar">${iniciais}</div>
     <div class="info">
       <div class="name">${m.nome}</div>
       <div class="preview">${m.texto}</div>
@@ -186,7 +188,6 @@ mensagens.forEach(m => {
       ${m.qtd ? `<div class="badge">${m.qtd}</div>` : ""}
     </div>
   `;
-  div.onclick = () => location.href = "sms_conversa.html";
   list.appendChild(div);
 });
 </script>
