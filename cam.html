@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Câmera ao Vivo — Investigador AI</title>
+<style>
+:root{
+  --bg:#000;
+  --accent:#e50914;
+  --muted:#9aa3ad;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:#fff;
+  font-family:"Poppins",system-ui,Roboto,Arial;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:14px;
+  min-height:100vh;
+}
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  width:100%;
+  max-width:420px;
+  margin-bottom:10px;
+}
+.back{color:var(--muted);cursor:pointer}
+.logo{width:64px;height:64px;object-fit:contain}
+.status{
+  font-size:13px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#7ed957;
+  box-shadow:0 0 6px #7ed957;
+  transition:.3s;
+}
+.offline{background:#e50914;box-shadow:0 0 6px #e50914;}
+.box{
+  width:100%;
+  max-width:420px;
+  background:#0f0f10;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.05);
+}
+iframe{
+  width:100%;
+  aspect-ratio:9/16;
+  border:none;
+  border-radius:10px;
+  background:#000;
+}
+h3{text-align:center;color:var(--accent);margin:10px 0}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="back" onclick="voltar()">← Voltar</div>
+  <img src="logo.png" class="logo" onerror="this.style.display='none'">
+  <div class="status"><div class="dot" id="dot"></div><span id="connText">Online</span></div>
+</div>
+
+<h3>Câmera ao Vivo</h3>
+<div class="box">
+  <!-- Câmera pública de exemplo -->
+  <iframe src="https://www.earthcam.com/usa/newyork/timessquare/?cam=tsrobo1" allowfullscreen></iframe>
+</div>
+
+<script>
+function voltar(){ location.href='dashboard.html'; }
+
+function atualizarStatus(){
+  const dot=document.getElementById('dot');
+  const text=document.getElementById('connText');
+  if(navigator.onLine){
+    dot.classList.remove('offline');
+    text.textContent='Online';
+  }else{
+    dot.classList.add('offline');
+    text.textContent='Offline';
+  }
+}
+window.addEventListener('online',atualizarStatus);
+window.addEventListener('offline',atualizarStatus);
+atualizarStatus();
+</script>
+
+</body>
+</html>
