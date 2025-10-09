@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Mensagens SMS — Investigador AI</title>
+<style>
+:root {
+  --bg:#000;
+  --accent:#e50914;
+  --muted:#9aa3ad;
+  --card:#0f0f10;
+  font-family:"Poppins",system-ui,Roboto,Arial;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  background:var(--bg);
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:14px;
+}
+.header{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  width:100%;
+  max-width:420px;
+  margin-bottom:10px;
+}
+.back{color:var(--muted);cursor:pointer;}
+.logo{margin:0 auto;width:64px;height:64px;object-fit:contain;}
+.container{
+  width:100%;
+  max-width:420px;
+  background:var(--card);
+  padding:12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.05);
+  box-shadow:0 8px 24px rgba(229,9,20,0.06);
+}
+.msg{
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  padding:10px 0;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.sender{
+  font-weight:600;
+  font-size:14px;
+  color:#fff;
+}
+.text{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.4;
+}
+.time{
+  color:#777;
+  font-size:11px;
+  text-align:right;
+}
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="back" onclick="voltar()">← Voltar</div>
+    <img src="logo.png" alt="Logo" class="logo" onerror="this.style.display='none'">
+  </div>
+
+  <div class="container" id="lista"></div>
+  
+<script>
+function voltar(){ location.href='dashboard.html'; }
+
+const mensagens = [
+  {remetente:'Vivo', texto:'Seu pacote de internet foi renovado com sucesso. Validade: 30 dias.', hora:'Hoje, 09:14'},
+  {remetente:'Claro', texto:'Recarga de R$ 20,00 realizada. Bônus de 2GB de internet válidos por 7 dias.', hora:'Hoje, 08:42'},
+  {remetente:'Nubank', texto:'Compra aprovada no valor de R$ 89,90 em SUPERMERCADO BJS. Limite disponível: R$ 1.210,00', hora:'Ontem, 19:33'},
+  {remetente:'Google', texto:'Seu código de verificação é 835244. Não compartilhe este código com ninguém.', hora:'Ontem, 16:22'},
+  {remetente:'Caixa', texto:'Depósito de R$ 150,00 identificado em sua conta. Consulte o app Caixa Tem.', hora:'Ontem, 10:45'},
+  {remetente:'Mercado Livre', texto:'Seu pedido #MLB94723 foi despachado! Acompanhe o envio pelo app.', hora:'06/10/2025, 20:10'},
+  {remetente:'Facebook', texto:'Seu código de login é 552981. Ele expira em 10 minutos.', hora:'06/10/2025, 19:22'},
+  {remetente:'Instagram', texto:'Alguém tentou acessar sua conta. Se não foi você, redefina sua senha.', hora:'06/10/2025, 18:59'},
+  {remetente:'TIM', texto:'Novo pacote de voz disponível! 400 minutos + WhatsApp grátis. Responda SIM para ativar.', hora:'06/10/2025, 14:30'},
+  {remetente:'Banco do Brasil', texto:'Compra aprovada no valor de R$ 152,90 - Loja AMZ*. Código de segurança: 8319', hora:'05/10/2025, 21:07'},
+  {remetente:'Netflix', texto:'Sua fatura foi paga com sucesso. Boa diversão!', hora:'05/10/2025, 09:54'},
+  {remetente:'Pix', texto:'Você recebeu R$ 25,00 de “João Pereira”. Mensagem: almoço de hoje.', hora:'05/10/2025, 08:16'},
+  {remetente:'Correios', texto:'Objeto PX812639BR em rota de entrega. Acompanhe: correios.com.br', hora:'04/10/2025, 15:44'},
+  {remetente:'Amazon', texto:'Entrega agendada para amanhã (07/10). Item: Echo Dot 5ª geração.', hora:'04/10/2025, 09:32'},
+  {remetente:'Santander', texto:'Pagamento de fatura confirmado. Valor R$ 325,50.', hora:'03/10/2025, 12:15'},
+  {remetente:'PicPay', texto:'Você recebeu R$ 12,00 de cashback por compra no iFood.', hora:'03/10/2025, 10:50'},
+  {remetente:'Gmail', texto:'Novo acesso detectado em dispositivo Android - foi você?', hora:'03/10/2025, 08:10'},
+  {remetente:'IFood', texto:'Seu pedido #34521 saiu para entrega! 🍕', hora:'02/10/2025, 21:25'}
+];
+
+const lista=document.getElementById('lista');
+mensagens.forEach(m=>{
+  const div=document.createElement('div');
+  div.className='msg';
+  div.innerHTML=`
+    <div class="sender">${m.remetente}</div>
+    <div class="text">${m.texto}</div>
+    <div class="time">${m.hora}</div>`;
+  lista.appendChild(div);
+});
+</script>
+</body>
+</html>
