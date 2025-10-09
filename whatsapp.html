@@ -1,238 +1,249 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>WhatsApp — Investigador AI</title>
 <style>
-:root{
-  --bg:#0b141a;
-  --chat-bg:#ece5dd;
-  --sent:#dcf8c6;
-  --recv:#fff;
-  --accent:#128c7e;
-  --muted:#666;
-  font-family:"Poppins",system-ui,Roboto,Arial;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-  background:var(--bg);
-  color:#fff;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-}
+  body {
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #ece5dd;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
 
-/* Header */
-.header{
-  width:100%;
-  max-width:420px;
-  background:var(--accent);
-  color:#fff;
-  padding:10px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-.back{cursor:pointer;font-weight:bold}
-.header h2{font-size:18px;margin:0}
+  .header {
+    background-color: #075e54;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding: 12px;
+  }
 
-/* Lista de contatos */
-.list{
-  width:100%;
-  max-width:420px;
-  background:#fff;
-  flex:1;
-  overflow-y:auto;
-}
-.contact{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:10px;
-  border-bottom:1px solid #eee;
-  cursor:pointer;
-}
-.avatar{
-  width:46px;height:46px;border-radius:50%;
-  background:#ccc url('https://i.pravatar.cc/46?img='+Math.floor(Math.random()*70)) center/cover;
-}
-.info{flex:1;display:flex;flex-direction:column;justify-content:center}
-.name{font-weight:600;color:#111}
-.preview{font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.time{font-size:11px;color:var(--muted);}
+  .back {
+    cursor: pointer;
+    font-size: 20px;
+    margin-right: 10px;
+  }
 
-/* Tela de conversa */
-.chat-screen{
-  width:100%;
-  max-width:420px;
-  display:none;
-  flex-direction:column;
-  background:var(--chat-bg) url('https://i.ibb.co/6N3Xdsp/wpp-bg.png') repeat;
-  background-size:contain;
-  height:100vh;
-}
-.chat-header{
-  background:var(--accent);
-  color:#fff;
-  padding:10px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-.chat-header img{
-  width:40px;height:40px;border-radius:50%;
-}
-.chat-header .name{font-weight:600;font-size:15px}
-.chat-box{
-  flex:1;
-  overflow-y:auto;
-  padding:10px;
-  display:flex;
-  flex-direction:column;
-}
-.msg{
-  max-width:75%;
-  padding:8px 10px;
-  border-radius:10px;
-  margin:4px 0;
-  font-size:14px;
-  position:relative;
-}
-.sent{align-self:flex-end;background:var(--sent)}
-.received{align-self:flex-start;background:var(--recv)}
-.time{
-  font-size:10px;
-  color:#888;
-  margin-top:2px;
-  align-self:flex-end;
-}
-.footer{
-  display:flex;
-  padding:8px;
-  background:#fff;
-  gap:8px;
-}
-.footer input{
-  flex:1;
-  border:1px solid #ccc;
-  border-radius:20px;
-  padding:8px 12px;
-}
-.footer button{
-  background:var(--accent);
-  border:none;
-  color:#fff;
-  border-radius:50%;
-  width:38px;
-  height:38px;
-  cursor:pointer;
-}
+  .contact-name {
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  .chat-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .msg {
+    max-width: 75%;
+    padding: 8px 12px;
+    margin: 6px 0;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.4;
+    position: relative;
+    word-wrap: break-word;
+  }
+
+  .received {
+    background-color: #fff;
+    align-self: flex-start;
+  }
+
+  .sent {
+    background-color: #dcf8c6;
+    align-self: flex-end;
+  }
+
+  .time {
+    font-size: 11px;
+    color: #666;
+    margin-top: 3px;
+    text-align: right;
+  }
+
+  .contacts {
+    background: #fff;
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .contact {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+  }
+
+  .avatar {
+    background: #ccc;
+    color: #fff;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  .info {
+    flex: 1;
+  }
+
+  .name {
+    font-weight: bold;
+  }
+
+  .preview {
+    font-size: 13px;
+    color: #777;
+  }
+
+  .footer {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: #fff;
+  }
+
+  .input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    background: #f0f0f0;
+    font-size: 14px;
+    outline: none;
+  }
+
+  .send {
+    background: #128c7e;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    margin-left: 8px;
+    cursor: pointer;
+  }
 </style>
 </head>
 <body>
 
-<!-- Cabeçalho principal -->
-<div class="header">
-  <div class="back" onclick="voltar()">← Voltar</div>
-  <h2>WhatsApp</h2>
-  <div style="font-size:12px;">Online</div>
+<div class="header" id="header">
+  <div class="back" onclick="voltar()">←</div>
+  <div class="contact-name">WhatsApp</div>
 </div>
 
-<!-- Lista de Contatos -->
-<div class="list" id="contactList"></div>
+<!-- Lista de contatos -->
+<div class="contacts" id="contacts"></div>
 
-<!-- Tela de Conversa -->
-<div class="chat-screen" id="chatScreen">
-  <div class="chat-header">
-    <img id="chatAvatar">
-    <div>
-      <div class="name" id="chatName">Contato</div>
-      <div style="font-size:12px;opacity:.8;">online</div>
-    </div>
-  </div>
-  <div class="chat-box" id="chatBox"></div>
-  <div class="footer">
-    <input id="msgInput" placeholder="Digite uma mensagem"/>
-    <button onclick="sendMsg()">➤</button>
-  </div>
+<!-- Chat -->
+<div class="chat-container" id="chat" style="display:none;"></div>
+
+<div class="footer" id="footer" style="display:none;">
+  <input class="input" id="msgInput" placeholder="Digite uma mensagem" />
+  <button class="send" onclick="enviar()">➤</button>
 </div>
 
 <script>
-function voltar(){ location.href='dashboard.html'; }
-
-/* Contatos simulados */
 const contatos = [
-  "Ana Clara","Bruno Souza","Carlos Lima","Daniela Rocha","Eduardo Pereira","Fernanda Alves","Gabriel Costa","Helena Martins",
-  "Igor Santos","Joana Freitas","Kleber Nunes","Larissa Duarte","Marcos Vinícius","Nathalia Gomes","Otávio Farias","Patrícia Moura",
-  "Rafael Carvalho","Sabrina Lopes","Thiago Azevedo","Vanessa Ribeiro"
+  "Ana Silva", "Bruno Costa", "Carlos Pereira", "Daniela Souza",
+  "Eduardo Lima", "Fernanda Rocha", "Gustavo Almeida", "Helena Dias",
+  "Igor Martins", "Juliana Castro", "Lucas Oliveira", "Mariana Ribeiro",
+  "Nathalia Torres", "Otávio Nunes", "Patrícia Gomes", "Rafael Santos",
+  "Sofia Melo", "Tiago Rocha", "Viviane Lopes", "Yuri Fernandes"
 ];
+
 const mensagens = [
-  "Oi, tudo bem?","Cheguei no trabalho.","Tá online?","Vamos almoçar?","Ok, combinado.","Depois te ligo.","Pode deixar.","Tô saindo de casa.",
-  "Preciso te mostrar algo.","Te mando o arquivo depois.","Boa noite 🌙","Valeu!","Tá tranquilo.","Beleza 👍","Já enviei pra você."
+  "Oi, tudo bem?", "Pode me ligar depois?", "Chego em 10 min.",
+  "Vi sua mensagem, já te retorno.", "Beleza 👍", "Boa noite 🌙",
+  "Você viu o e-mail do trabalho?", "Vamos marcar algo no fim de semana?",
+  "Tô saindo de casa.", "Valeu!"
 ];
-const list=document.getElementById('contactList');
-const chatScreen=document.getElementById('chatScreen');
-const chatBox=document.getElementById('chatBox');
 
-/* gerar lista */
-contatos.forEach((nome,i)=>{
-  const div=document.createElement('div');
-  div.className='contact';
-  const hora=`${String(Math.floor(Math.random()*12)+8).padStart(2,'0')}:${String(Math.floor(Math.random()*59)).padStart(2,'0')}`;
-  const msg=mensagens[Math.floor(Math.random()*mensagens.length)];
-  const img=`https://i.pravatar.cc/46?img=${i+5}`;
-  div.innerHTML=`
-    <div class="avatar" style="background:url('${img}') center/cover"></div>
-    <div class="info">
-      <div class="name">${nome}</div>
-      <div class="preview">${msg}</div>
-    </div>
-    <div class="time">${hora}</div>
-  `;
-  div.onclick=()=>abrirChat(nome,img);
-  list.appendChild(div);
-});
+const contactsDiv = document.getElementById("contacts");
+const chatDiv = document.getElementById("chat");
+const header = document.getElementById("header");
+const footer = document.getElementById("footer");
 
-/* abrir conversa */
-function abrirChat(nome,img){
-  document.querySelector('.list').style.display='none';
-  chatScreen.style.display='flex';
-  document.getElementById('chatName').textContent=nome;
-  document.getElementById('chatAvatar').src=img;
-  gerarMensagens(nome);
-}
-
-/* gerar mensagens fictícias */
-function gerarMensagens(nome){
-  chatBox.innerHTML='';
-  const qtd=10+Math.floor(Math.random()*6);
-  for(let i=0;i<qtd;i++){
-    const tipo = (i%2===0)?'sent':'received';
-    const texto = mensagens[Math.floor(Math.random()*mensagens.length)];
-    addMsg(texto,tipo);
+function voltar() {
+  if (chatDiv.style.display === "none") {
+    location.href = "dashboard.html";
+  } else {
+    chatDiv.style.display = "none";
+    footer.style.display = "none";
+    contactsDiv.style.display = "block";
+    document.querySelector(".contact-name").textContent = "WhatsApp";
   }
 }
 
-/* adicionar mensagem */
-function addMsg(txt,tipo){
-  const msg=document.createElement('div');
-  msg.className='msg '+tipo;
-  msg.innerHTML=`${txt}<div class="time">${new Date().toLocaleTimeString().slice(0,5)}</div>`;
-  chatBox.appendChild(msg);
-  chatBox.scrollTop=chatBox.scrollHeight;
+function abrirConversa(nome) {
+  contactsDiv.style.display = "none";
+  chatDiv.style.display = "flex";
+  footer.style.display = "flex";
+  document.querySelector(".contact-name").textContent = nome;
+  chatDiv.innerHTML = "";
+  
+  const qtd = Math.floor(Math.random() * 8) + 6;
+  for (let i = 0; i < qtd; i++) {
+    const msg = mensagens[Math.floor(Math.random() * mensagens.length)];
+    const tipo = i % 2 === 0 ? "sent" : "received";
+    const div = document.createElement("div");
+    div.className = "msg " + tipo;
+    div.innerHTML = msg + `<div class="time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>`;
+    chatDiv.appendChild(div);
+  }
+  chatDiv.scrollTop = chatDiv.scrollHeight;
 }
 
-/* enviar mensagem */
-function sendMsg(){
-  const inp=document.getElementById('msgInput');
-  const txt=inp.value.trim();
-  if(!txt) return;
-  addMsg(txt,'sent');
-  inp.value='';
-  setTimeout(()=>addMsg(mensagens[Math.floor(Math.random()*mensagens.length)],'received'),1000+Math.random()*1500);
+function enviar() {
+  const inp = document.getElementById("msgInput");
+  const texto = inp.value.trim();
+  if (!texto) return;
+  const div = document.createElement("div");
+  div.className = "msg sent";
+  div.innerHTML = texto + `<div class="time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>`;
+  chatDiv.appendChild(div);
+  inp.value = "";
+  chatDiv.scrollTop = chatDiv.scrollHeight;
+  setTimeout(() => {
+    const resp = mensagens[Math.floor(Math.random() * mensagens.length)];
+    const rdiv = document.createElement("div");
+    rdiv.className = "msg received";
+    rdiv.innerHTML = resp + `<div class="time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>`;
+    chatDiv.appendChild(rdiv);
+    chatDiv.scrollTop = chatDiv.scrollHeight;
+  }, 1500);
 }
+
+contatos.forEach(n => {
+  const c = document.createElement("div");
+  c.className = "contact";
+  const a = document.createElement("div");
+  a.className = "avatar";
+  a.textContent = n.charAt(0).toUpperCase();
+  const info = document.createElement("div");
+  info.className = "info";
+  info.innerHTML = `<div class='name'>${n}</div><div class='preview'>${mensagens[Math.floor(Math.random()*mensagens.length)]}</div>`;
+  c.appendChild(a);
+  c.appendChild(info);
+  c.onclick = () => abrirConversa(n);
+  contactsDiv.appendChild(c);
+});
 </script>
 </body>
 </html>
