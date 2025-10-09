@@ -1,67 +1,91 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Câmera ao Vivo — Investigador AI</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Câmera Ao Vivo — Investigador AI</title>
 <style>
-:root{
-  --bg:#000;
-  --accent:#e50914;
-  --muted:#9aa3ad;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-  background:var(--bg);
-  color:#fff;
-  font-family:"Poppins",system-ui,Roboto,Arial;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding:14px;
-  min-height:100vh;
-}
-.header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  width:100%;
-  max-width:420px;
-  margin-bottom:10px;
-}
-.back{color:var(--muted);cursor:pointer}
-.logo{width:64px;height:64px;object-fit:contain}
-.status{
-  font-size:13px;
-  display:flex;
-  align-items:center;
-  gap:6px;
-}
-.dot{
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  background:#7ed957;
-  box-shadow:0 0 6px #7ed957;
-  transition:.3s;
-}
-.offline{background:#e50914;box-shadow:0 0 6px #e50914;}
-.box{
-  width:100%;
-  max-width:420px;
-  background:#0f0f10;
-  padding:10px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.05);
-}
-iframe{
-  width:100%;
-  aspect-ratio:9/16;
-  border:none;
-  border-radius:10px;
-  background:#000;
-}
-h3{text-align:center;color:var(--accent);margin:10px 0}
+  :root{
+    --bg:#000;
+    --accent:#e50914;
+    --muted:#9aa3ad;
+    --green:#7ed957;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg);
+    color:#fff;
+    font-family:"Poppins",system-ui,Roboto,Arial;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:14px;
+    min-height:100vh;
+  }
+  .header{
+    width:100%;
+    max-width:420px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:12px;
+  }
+  .back{color:var(--muted);cursor:pointer;font-size:14px}
+  .logo{width:64px;height:64px;object-fit:contain}
+  .status{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);transition:.3s}
+  .dot.off{background:var(--accent);box-shadow:0 0 6px var(--accent)}
+
+  .box{
+    width:100%;
+    max-width:420px;
+    background:#0f0f10;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.05);
+    overflow:hidden;
+    position:relative;
+  }
+  .cam-wrap{
+    width:100%;
+    aspect-ratio:16/9;
+    background:#000;
+    display:grid;
+    place-items:center;
+  }
+  .cam-wrap img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .overlay-live{
+    position:absolute;
+    top:8px;
+    left:8px;
+    background:#e50914;
+    color:#fff;
+    padding:4px 8px;
+    font-size:12px;
+    border-radius:4px;
+    font-weight:700;
+    opacity:0.9;
+    z-index:2;
+  }
+  .controls{
+    display:flex;
+    gap:8px;
+    justify-content:space-between;
+    margin-top:10px;
+    width:100%;
+    max-width:420px;
+  }
+  .btn{background:var(--accent);color:#fff;padding:8px 10px;border-radius:8px;border:none;cursor:pointer;font-weight:600}
+  .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.05);color:var(--muted)}
+  .small{color:var(--muted);font-size:13px;margin-top:8px;text-align:center;}
+
+  @media(max-width:420px){
+    .header, .box, .controls{max-width:95vw}
+  }
 </style>
 </head>
 <body>
@@ -69,32 +93,93 @@ h3{text-align:center;color:var(--accent);margin:10px 0}
 <div class="header">
   <div class="back" onclick="voltar()">← Voltar</div>
   <img src="logo.png" class="logo" onerror="this.style.display='none'">
-  <div class="status"><div class="dot" id="dot"></div><span id="connText">Online</span></div>
+  <div class="status">
+    <div id="dot" class="dot"></div>
+    <div id="connText">Online</div>
+  </div>
 </div>
 
-<h3>Câmera ao Vivo</h3>
 <div class="box">
-  <!-- Câmera pública de exemplo -->
-  <iframe src="https://www.earthcam.com/usa/newyork/timessquare/?cam=tsrobo1" allowfullscreen></iframe>
+  <div class="overlay-live">LIVE</div>
+  <div class="cam-wrap" id="camWrap">
+    <img id="camImg" alt="Câmera ao vivo" src="" />
+  </div>
 </div>
+
+<div class="controls">
+  <button class="btn" id="btnRefresh">Atualizar agora</button>
+  <button class="btn ghost" id="btnOpenSite">Abrir no site original</button>
+</div>
+
+<div class="small">Imagem atualizada periodicamente; se não carregar, use "Abrir no site original".</div>
 
 <script>
+const SNAPSHOT_URL = "https://www.earthcam.com/cams/includes/image.php?logo=0&playbutton=0&s=1&img=E5a4Ac%2F%2Fll%2Fw6pvn9FVQug%3D%3D"; // usar snapshot exato
+const SITE_URL = "https://www.earthcam.com/usa/newyork/timessquare/?cam=tsrobo1";
+
+const camImg = document.getElementById('camImg');
+const loading = document.createElement('div');
+loading.textContent = "Carregando...";
+loading.style.position = "absolute";
+loading.style.color = "#999";
+loading.style.fontSize = "14px";
+loading.style.top = "50%";
+loading.style.left = "50%";
+loading.style.transform = "translate(-50%, -50%)";
+loading.style.pointerEvents = "none";
+loading.style.zIndex = "1";
+document.getElementById('camWrap').appendChild(loading);
+
+let intervalId = null;
+const refreshInterval = 5000;
+
+function buildUrl(url){
+  const sep = url.includes('?')? '&':'?';
+  return url + sep + 'cb=' + Date.now();
+}
+
+function loadSnapshot(){
+  loading.style.display = "block";
+  camImg.onload = ()=> { loading.style.display = "none"; }
+  camImg.onerror = ()=> { loading.textContent = "Imagem não carregou"; }
+  camImg.src = buildUrl(SNAPSHOT_URL);
+}
+
+function startAuto(){
+  if(intervalId) clearInterval(intervalId);
+  intervalId = setInterval(loadSnapshot, refreshInterval);
+  loadSnapshot();
+}
+
+function stopAuto(){
+  if(intervalId) clearInterval(intervalId);
+  intervalId = null;
+}
+
 function voltar(){ location.href='dashboard.html'; }
 
-function atualizarStatus(){
-  const dot=document.getElementById('dot');
-  const text=document.getElementById('connText');
-  if(navigator.onLine){
-    dot.classList.remove('offline');
-    text.textContent='Online';
-  }else{
-    dot.classList.add('offline');
-    text.textContent='Offline';
-  }
+window.addEventListener('online', ()=>{ 
+  document.getElementById('dot').classList.remove('off');
+  document.getElementById('connText').textContent = "Online";
+  startAuto();
+});
+window.addEventListener('offline', ()=>{ 
+  document.getElementById('dot').classList.add('off');
+  document.getElementById('connText').textContent = "Offline";
+  stopAuto();
+});
+
+document.getElementById('btnRefresh').addEventListener('click', ()=> loadSnapshot());
+document.getElementById('btnOpenSite').addEventListener('click', ()=> window.open(SITE_URL, '_blank'));
+
+if(navigator.onLine){
+  document.getElementById('dot').classList.remove('off');
+  document.getElementById('connText').textContent = "Online";
+  startAuto();
+} else {
+  document.getElementById('dot').classList.add('off');
+  document.getElementById('connText').textContent = "Offline";
 }
-window.addEventListener('online',atualizarStatus);
-window.addEventListener('offline',atualizarStatus);
-atualizarStatus();
 </script>
 
 </body>
