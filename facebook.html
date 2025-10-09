@@ -1,124 +1,41 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Facebook — Investigador AI</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Instagram — Investigador AI (skeleton)</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
-  body{background:#f0f2f5;color:#050505;display:flex;flex-direction:column;align-items:center;}
-  header{
-    width:100%;background:#1877f2;color:#fff;padding:10px 16px;
-    display:flex;align-items:center;justify-content:space-between;
-    position:sticky;top:0;z-index:10;
-  }
-  header h1{font-size:22px;font-weight:700;}
-  header .icons{display:flex;gap:14px;font-size:20px;}
-  .feed{width:100%;max-width:500px;margin-top:12px;}
-  .post{
-    background:#fff;border-radius:10px;box-shadow:0 1px 2px rgba(0,0,0,.1);
-    margin:12px;padding:12px;
-  }
-  .user{
-    display:flex;align-items:center;gap:10px;margin-bottom:8px;
-  }
-  .user img{
-    width:40px;height:40px;border-radius:50%;object-fit:cover;
-  }
-  .user .name{font-weight:600;font-size:15px;}
-  .user .time{font-size:12px;color:#65676b;}
-  .text{font-size:15px;margin:6px 0 10px;}
-  .photo{width:100%;border-radius:8px;object-fit:cover;max-height:360px;}
-  .actions{
-    display:flex;justify-content:space-between;color:#65676b;
-    font-size:14px;margin-top:8px;border-top:1px solid #ddd;padding-top:6px;
-  }
-  .actions span{cursor:pointer;}
-  .back{
-    position:fixed;top:10px;left:10px;color:#fff;font-weight:bold;
-    cursor:pointer;z-index:20;
-  }
+  body{background:#fff;color:#111;display:flex;flex-direction:column;align-items:center;}
+  header{width:100%;max-width:420px;padding:10px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
+  header .logo{font-weight:700;font-size:20px}
+  .container{width:100%;max-width:420px}
+  .stories{display:flex;gap:10px;padding:12px;overflow:auto}
+  .story{width:68px;flex:0 0 68px;text-align:center}
+  .story img{width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid #fffc}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:6px}
+  .grid img{width:100%;height:120px;object-fit:cover}
 </style>
 </head>
 <body>
-
-<header>
-  <div class="back" onclick="voltar()">←</div>
-  <h1>Facebook</h1>
-  <div class="icons">
-    🔍 🔔
-  </div>
-</header>
-
-<div class="feed">
-  <div class="post">
-    <div class="user">
-      <img src="https://randomuser.me/api/portraits/women/44.jpg">
-      <div>
-        <div class="name">Ana Souza</div>
-        <div class="time">há 2 h</div>
-      </div>
-    </div>
-    <div class="text">Fim de semana incrível com a família 💙</div>
-    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=500&q=60" class="photo">
-    <div class="actions"><span>👍 Curtir</span><span>💬 Comentar</span><span>↗️ Compartilhar</span></div>
-  </div>
-
-  <div class="post">
-    <div class="user">
-      <img src="https://randomuser.me/api/portraits/men/33.jpg">
-      <div>
-        <div class="name">Carlos Mendes</div>
-        <div class="time">há 5 h</div>
-      </div>
-    </div>
-    <div class="text">Nova meta: treinar todos os dias! 💪</div>
-    <img src="https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=500&q=60" class="photo">
-    <div class="actions"><span>👍 Curtir</span><span>💬 Comentar</span><span>↗️ Compartilhar</span></div>
-  </div>
-
-  <div class="post">
-    <div class="user">
-      <img src="https://randomuser.me/api/portraits/women/68.jpg">
-      <div>
-        <div class="name">Mariana Costa</div>
-        <div class="time">há 1 d</div>
-      </div>
-    </div>
-    <div class="text">Adorei esse lugar, quero voltar logo! 😍🌅</div>
-    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=500&q=60" class="photo">
-    <div class="actions"><span>👍 Curtir</span><span>💬 Comentar</span><span>↗️ Compartilhar</span></div>
-  </div>
-
-  <div class="post">
-    <div class="user">
-      <img src="https://randomuser.me/api/portraits/men/12.jpg">
-      <div>
-        <div class="name">Lucas Pereira</div>
-        <div class="time">há 2 d</div>
-      </div>
-    </div>
-    <div class="text">Feliz em anunciar meu novo projeto! 🚀</div>
-    <img src="https://images.unsplash.com/photo-1487017159836-4e23ece2e4cf?auto=format&fit=crop&w=500&q=60" class="photo">
-    <div class="actions"><span>👍 Curtir</span><span>💬 Comentar</span><span>↗️ Compartilhar</span></div>
-  </div>
-
-  <div class="post">
-    <div class="user">
-      <img src="https://randomuser.me/api/portraits/men/51.jpg">
-      <div>
-        <div class="name">Pedro Santos</div>
-        <div class="time">há 3 d</div>
-      </div>
-    </div>
-    <div class="text">Saudades da turma! Quem topa marcar algo? 👀</div>
-    <img src="https://images.unsplash.com/photo-1558981001-10caa4a6bca8?auto=format&fit=crop&w=500&q=60" class="photo">
-    <div class="actions"><span>👍 Curtir</span><span>💬 Comentar</span><span>↗️ Compartilhar</span></div>
-  </div>
+<header><div class="logo">Instagram</div><div>✉️</div></header>
+<div class="container">
+  <div class="stories" id="igStories"></div>
+  <div class="grid" id="igGrid"></div>
 </div>
-
 <script>
-function voltar(){ location.href='dashboard.html'; }
+const st = [
+  "https://randomuser.me/api/portraits/women/10.jpg",
+  "https://randomuser.me/api/portraits/men/11.jpg",
+  "https://randomuser.me/api/portraits/women/12.jpg",
+  "https://randomuser.me/api/portraits/men/13.jpg",
+  "https://randomuser.me/api/portraits/women/14.jpg"
+];
+const igStories = document.getElementById('igStories');
+st.forEach((s,i)=>{ const d=document.createElement('div'); d.className='story'; d.innerHTML=`<img src="${s}"><div style="font-size:12px;margin-top:6px">pessoa${i+1}</div>`; igStories.appendChild(d); });
+
+const igGrid = document.getElementById('igGrid');
+for(let i=0;i<12;i++){ const img=document.createElement('img'); img.src=`https://picsum.photos/seed/ig${i}/400/400`; igGrid.appendChild(img); }
 </script>
 </body>
 </html>
