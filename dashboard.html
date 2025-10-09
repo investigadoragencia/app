@@ -109,7 +109,6 @@
     font-size:13px;
   }
 
-  /* Bolinha verde */
   .status-dot {
     display:inline-block;
     width:8px;
@@ -148,7 +147,6 @@
   </div>
 
   <div class="grid">
-    <!-- Todos os cards continuam exatamente iguais -->
     <div class="card" onclick="abrirLocalizacao()">
       <div class="icon">📍</div>
       <div class="info"><div class="number" id="loc">17</div><div class="label">Localizações</div></div>
@@ -251,8 +249,8 @@ function logout(){localStorage.removeItem('logado');location.href="login.html";}
 function abrirLocalizacao(){location.href="localizacao.html";}
 function abrirChamadas(){location.href="chamadas.html";}
 function abrirFotos(){location.href="fotos.html";}
-function abrirSMS(){location.href="mensagens.html?type=sms";}
-function abrirWhatsApp(){location.href="mensagens.html?type=whatsapp";}
+function abrirSMS(){location.href="sms.html";}
+function abrirWhatsApp(){location.href="whatsapp.html";}
 function abrirMicrofone(){location.href="microfone.html";}
 function abrirCameraAoVivo(){location.href="cam.html";}
 function abrirTela(){location.href="tela.html";}
@@ -267,4 +265,3 @@ function abrirPesquisas(){location.href="pesquisas.html";}
 </script>
 </body>
 </html>
-
