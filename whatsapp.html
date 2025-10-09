@@ -1,166 +1,219 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>WhatsApp — Investigador AI</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WhatsApp</title>
 <style>
-:root{
-  --whats-green:#075E54;
-  --whats-light:#DCF8C6;
-  --gray:#f0f0f0;
-  --text:#111;
-  font-family:"Helvetica Neue",Roboto,Arial;
+:root {
+  --bg: #fff;
+  --chat-bg: #ece5dd;
+  --sent: #dcf8c6;
+  --received: #fff;
+  --text: #111;
+  --muted: #666;
+  --green: #075E54;
+  --light-green: #25D366;
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:#fff;color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
-.header{
-  width:100%;background:var(--whats-green);color:#fff;
-  padding:12px;text-align:center;font-weight:bold;font-size:18px;
-  position:sticky;top:0;z-index:10;
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
 }
-.list{width:100%;max-width:480px;background:#fff}
-.item{
-  display:flex;align-items:center;gap:12px;
-  padding:10px 14px;border-bottom:1px solid #eee;cursor:pointer;
+header {
+  background: var(--green);
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
 }
-.item:hover{background:#f7f7f7}
-.avatar{
-  width:52px;height:52px;border-radius:50%;object-fit:cover;background:#ddd;
+.container {
+  max-width: 480px;
+  margin: auto;
 }
-.name{font-weight:600}
-.msg{font-size:14px;color:#555;margin-top:2px}
-.chat-screen{display:none;flex-direction:column;height:100vh;width:100%;max-width:480px;background:#ece5dd}
-.topbar{
-  background:var(--whats-green);color:#fff;display:flex;align-items:center;gap:10px;padding:10px;
+.contact-list {
+  list-style: none;
 }
-.topbar img{width:42px;height:42px;border-radius:50%;object-fit:cover}
-.chat-box{flex:1;overflow:auto;padding:10px;display:flex;flex-direction:column;background:url('https://i.imgur.com/dY9v4E7.png') repeat center/cover}
-.bubble{
-  padding:8px 10px;border-radius:10px;max-width:80%;margin-bottom:6px;font-size:14px;
+.contact {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
 }
-.sent{align-self:flex-end;background:var(--whats-light)}
-.received{align-self:flex-start;background:#fff}
-.time{font-size:11px;text-align:right;color:#555;margin-top:2px}
-.footer{
-  display:flex;align-items:center;gap:8px;padding:8px;background:#fff;border-top:1px solid #ccc;
+.contact:hover { background: #f7f7f7; }
+.contact img {
+  width: 48px; height: 48px; border-radius: 50%;
+  object-fit: cover;
 }
-input{
-  flex:1;padding:10px;border-radius:20px;border:1px solid #ccc;outline:none;
+.contact .info { flex: 1; }
+.contact .name { font-weight: 600; }
+.contact .last { color: var(--muted); font-size: 13px; }
+
+.chat-header {
+  background: var(--green);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  position: sticky;
+  top: 0;
 }
-button{
-  background:var(--whats-green);border:none;color:#fff;border-radius:50%;
-  width:42px;height:42px;font-size:18px;cursor:pointer;
+.chat-header img {
+  width: 40px; height: 40px; border-radius: 50%; object-fit: cover;
+}
+.chat-header .name { font-weight: 600; }
+
+.chat-area {
+  background: var(--chat-bg);
+  min-height: 85vh;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.msg {
+  max-width: 75%;
+  padding: 8px 12px;
+  border-radius: 10px;
+  margin: 4px 0;
+  position: relative;
+  font-size: 14px;
+  color: var(--text);
+}
+.sent { background: var(--sent); align-self: flex-end; }
+.received { background: var(--received); align-self: flex-start; }
+.time {
+  font-size: 11px; color: var(--muted);
+  margin-top: 4px; text-align: right;
+}
+
+.input-area {
+  display: flex;
+  padding: 8px;
+  background: #f0f0f0;
+}
+.input-area input {
+  flex: 1;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 15px;
+  font-size: 14px;
+  outline: none;
+}
+.send-btn {
+  background: var(--light-green);
+  border: none;
+  border-radius: 50%;
+  width: 40px; height: 40px;
+  color: white;
+  font-size: 20px;
+  margin-left: 8px;
+}
+
+/* avatar padrão */
+.avatar {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: #ccc;
+  display: grid; place-items: center;
+  color: #666;
+  font-size: 22px;
 }
 </style>
 </head>
 <body>
 
-<div class="header">WhatsApp</div>
+<div class="container" id="contactsPage">
+  <header>WhatsApp</header>
+  <ul class="contact-list" id="contacts"></ul>
+</div>
 
-<div class="list" id="contactList"></div>
-
-<!-- Tela de Chat -->
-<div class="chat-screen" id="chatScreen">
-  <div class="topbar">
+<div class="container" id="chatPage" style="display:none">
+  <div class="chat-header">
     <div onclick="voltar()" style="cursor:pointer;font-size:20px;">←</div>
-    <img id="chatPhoto" src="" alt="">
-    <div id="chatName"></div>
+    <img id="chatPhoto" src="">
+    <div class="name" id="chatName"></div>
   </div>
-  <div class="chat-box" id="chatBox"></div>
-  <div class="footer">
-    <input id="msgInput" placeholder="Digite uma mensagem"/>
-    <button onclick="enviar()">➤</button>
+  <div class="chat-area" id="chatArea"></div>
+  <div class="input-area">
+    <input id="msgInput" placeholder="Mensagem" />
+    <button class="send-btn" onclick="sendMsg()">➤</button>
   </div>
 </div>
 
 <script>
-const contacts = [
-  {name:"Daniel Rocha", msg:"Tá chegando?", img:"https://randomuser.me/api/portraits/men/32.jpg"},
-  {name:"Equipe de Trabalho", msg:"Reunião às 15h.", img:"avatar.png"},
-  {name:"Fernanda Lopes", msg:"Pode me ligar rapidinho?", img:"https://randomuser.me/api/portraits/women/44.jpg"},
-  {name:"Grupo Família ❤️", msg:"Bom diaaa ☀️", img:"avatar.png"},
-  {name:"Marcos Lima", msg:"Já enviou os documentos?", img:"https://randomuser.me/api/portraits/men/12.jpg"},
-  {name:"Pai", msg:"Tudo bem por aí?", img:"avatar.png"},
-  {name:"Mãe", msg:"Te amo 💕", img:"avatar.png"},
-  {name:"Pedro Oliveira", msg:"Segue o link", img:"https://randomuser.me/api/portraits/men/40.jpg"},
-  {name:"João Victor", msg:"Cheguei!", img:"avatar.png"},
-  {name:"Tia Lúcia", msg:"Vem almoçar domingo?", img:"avatar.png"},
-  {name:"Lucas Mendes", msg:"Entra na call rapidinho?", img:"https://randomuser.me/api/portraits/men/5.jpg"},
-  {name:"Carla Souza", msg:"Depois te ligo ❤️", img:"https://randomuser.me/api/portraits/women/60.jpg"},
-  {name:"André Silva", msg:"Me avisa quando sair", img:"https://randomuser.me/api/portraits/men/10.jpg"},
-  {name:"Beatriz Ramos", msg:"Te mandei o arquivo", img:"https://randomuser.me/api/portraits/women/8.jpg"},
-  {name:"Rafaela Gomes", msg:"Amanhã tô livre!", img:"https://randomuser.me/api/portraits/women/25.jpg"},
-  {name:"Joana Martins", msg:"Não esquece do café ☕", img:"avatar.png"},
-  {name:"Tiago Fernandes", msg:"Chego em 5 min", img:"https://randomuser.me/api/portraits/men/19.jpg"},
-  {name:"Larissa Alves", msg:"Já tô indo ❤️", img:"https://randomuser.me/api/portraits/women/13.jpg"},
-  {name:"Ricardo Costa", msg:"Preciso falar com você", img:"https://randomuser.me/api/portraits/men/33.jpg"},
-  {name:"Camila Dias", msg:"Boa noite 🌙", img:"https://randomuser.me/api/portraits/women/34.jpg"}
+const contatos = [
+  { nome:"Daniel Rocha", msg:"Tá chegando?", foto:"https://randomuser.me/api/portraits/men/32.jpg" },
+  { nome:"Fernanda Lopes", msg:"Pode me ligar rapidinho?", foto:"https://randomuser.me/api/portraits/women/65.jpg" },
+  { nome:"Marcos Lima", msg:"Já enviou os documentos?", foto:"https://randomuser.me/api/portraits/men/45.jpg" },
+  { nome:"Pedro Oliveira", msg:"Segue o link", foto:"https://randomuser.me/api/portraits/men/12.jpg" },
+  { nome:"Tia Lúcia", msg:"Vem almoçar domingo?", foto:"" },
+  { nome:"Grupo Família ❤️", msg:"Bom diaaa ☀️", foto:"" },
+  { nome:"Mãe", msg:"Te amo 💕", foto:"" },
+  { nome:"Pai", msg:"Tudo bem por aí?", foto:"" },
+  { nome:"Equipe de Trabalho", msg:"Reunião às 15h.", foto:"" },
+  { nome:"João Victor", msg:"Cheguei!", foto:"" },
 ];
 
-const list=document.getElementById("contactList");
-contacts.forEach((c,i)=>{
-  const div=document.createElement("div");
-  div.className="item";
-  div.onclick=()=>abrirChat(c);
-  div.innerHTML=`
-    <img src="${c.img}" class="avatar" onerror="this.src='avatar.png'">
-    <div><div class="name">${c.name}</div><div class="msg">${c.msg}</div></div>`;
-  list.appendChild(div);
+const chatPadrao = [
+  {t:"Oi, tudo bem?",tipo:"received"},
+  {t:"Tudo sim, e você?",tipo:"sent"},
+  {t:"Tô bem! Bora marcar?",tipo:"received"},
+  {t:"Bora sim 👍",tipo:"sent"}
+];
+
+const list = document.getElementById("contacts");
+contatos.forEach((c,i)=>{
+  const li=document.createElement("li");
+  li.className="contact";
+  li.onclick=()=>abrirChat(i);
+  if(c.foto)
+    li.innerHTML=`<img src="${c.foto}" alt=""><div class="info"><div class="name">${c.nome}</div><div class="last">${c.msg}</div></div>`;
+  else
+    li.innerHTML=`<div class="avatar">👤</div><div class="info"><div class="name">${c.nome}</div><div class="last">${c.msg}</div></div>`;
+  list.appendChild(li);
 });
 
-function abrirChat(c){
-  document.querySelector(".list").style.display="none";
-  const chat=document.getElementById("chatScreen");
-  chat.style.display="flex";
-  document.getElementById("chatName").textContent=c.name;
-  document.getElementById("chatPhoto").src=c.img;
-  gerarMensagens();
+function abrirChat(i){
+  document.getElementById("contactsPage").style.display="none";
+  document.getElementById("chatPage").style.display="block";
+  const c=contatos[i];
+  document.getElementById("chatName").textContent=c.nome;
+  const foto=c.foto || "";
+  document.getElementById("chatPhoto").src=foto || "https://cdn-icons-png.flaticon.com/512/847/847969.png";
+  const area=document.getElementById("chatArea");
+  area.innerHTML="";
+  chatPadrao.forEach(m=>{
+    const div=document.createElement("div");
+    div.className="msg "+m.tipo;
+    div.innerHTML=`${m.t}<div class="time">${new Date().toLocaleTimeString().slice(0,5)}</div>`;
+    area.appendChild(div);
+  });
+  area.scrollTop=area.scrollHeight;
 }
 
 function voltar(){
-  document.getElementById("chatScreen").style.display="none";
-  document.querySelector(".list").style.display="block";
+  document.getElementById("chatPage").style.display="none";
+  document.getElementById("contactsPage").style.display="block";
 }
 
-const mensagens = [
-  "Oi, tudo bem?","Tô bem, e você?","Bora marcar algo?",
-  "Tá chegando?","Chego em 10 min.","Pode me ligar rapidinho?",
-  "Te mandei o arquivo","Depois te conto","❤️","Haha ok 😂"
-];
-
-function gerarMensagens(){
-  const chat=document.getElementById("chatBox");
-  chat.innerHTML="";
-  for(let i=0;i<6;i++){
-    const div=document.createElement("div");
-    const tipo=i%2?"sent":"received";
-    div.className=`bubble ${tipo}`;
-    div.textContent=mensagens[Math.floor(Math.random()*mensagens.length)];
-    const hora=document.createElement("div");
-    hora.className="time";
-    hora.textContent=new Date().toLocaleTimeString().slice(0,5);
-    div.appendChild(hora);
-    chat.appendChild(div);
-  }
-  chat.scrollTop=chat.scrollHeight;
-}
-
-function enviar(){
-  const input=document.getElementById("msgInput");
-  const val=input.value.trim();
-  if(!val)return;
-  const chat=document.getElementById("chatBox");
+function sendMsg(){
+  const v=document.getElementById("msgInput").value.trim();
+  if(!v)return;
+  const area=document.getElementById("chatArea");
   const div=document.createElement("div");
-  div.className="bubble sent";
-  div.textContent=val;
-  const hora=document.createElement("div");
-  hora.className="time";
-  hora.textContent=new Date().toLocaleTimeString().slice(0,5);
-  div.appendChild(hora);
-  chat.appendChild(div);
-  chat.scrollTop=chat.scrollHeight;
-  input.value="";
+  div.className="msg sent";
+  div.innerHTML=`${v}<div class="time">${new Date().toLocaleTimeString().slice(0,5)}</div>`;
+  area.appendChild(div);
+  document.getElementById("msgInput").value="";
+  area.scrollTop=area.scrollHeight;
 }
 </script>
 </body>
