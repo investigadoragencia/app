@@ -1,211 +1,121 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Facebook — Investigador AI</title>
 <style>
-:root {
-  --fb-blue: #1877f2;
-  --bg: #f0f2f5;
-  --text: #050505;
-  --muted: #65676b;
-  --white: #fff;
-  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-}
-
-/* Header */
-.header {
-  width: 100%;
-  background: var(--white);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 16px;
-  border-bottom: 1px solid #ddd;
-  position: sticky;
-  top: 0;
-}
-.header .title {
-  color: var(--fb-blue);
-  font-size: 22px;
-  font-weight: bold;
-}
-.header .back {
-  color: var(--fb-blue);
-  font-size: 20px;
-  cursor: pointer;
-}
-
-/* Feed */
-.feed {
-  width: 100%;
-  max-width: 500px;
-  margin-top: 10px;
-}
-
-/* Post */
-.post {
-  background: var(--white);
-  margin-bottom: 12px;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  overflow: hidden;
-}
-.post-header {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-}
-.post-header img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
-}
-.post-header .info {
-  flex: 1;
-}
-.post-header .name {
-  font-weight: 600;
-  font-size: 15px;
-}
-.post-header .time {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.post p {
-  padding: 0 12px 10px;
-  font-size: 15px;
-}
-
-.post img {
-  width: 100%;
-  max-height: 360px;
-  object-fit: cover;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #eee;
-}
-
-/* Ações */
-.actions {
-  display: flex;
-  justify-content: space-around;
-  border-top: 1px solid #eee;
-  padding: 8px 0;
-}
-.actions div {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--muted);
-  font-size: 14px;
-  cursor: pointer;
-}
-.actions div:hover {
-  background: #f2f2f2;
-  border-radius: 6px;
-  padding: 4px;
-}
-
-/* Rodapé */
-.footer {
-  color: var(--muted);
-  font-size: 13px;
-  margin: 10px;
-  text-align: center;
-}
+  *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  body{background:#f0f2f5;color:#050505;display:flex;flex-direction:column;align-items:center;}
+  header{
+    width:100%;background:#1877f2;color:#fff;padding:10px 16px;
+    display:flex;align-items:center;justify-content:space-between;
+    position:sticky;top:0;z-index:10;
+  }
+  header h1{font-size:22px;font-weight:700;}
+  header .icons{display:flex;gap:14px;font-size:20px;}
+  .feed{width:100%;max-width:500px;margin-top:12px;}
+  .post{
+    background:#fff;border-radius:10px;box-shadow:0 1px 2px rgba(0,0,0,.1);
+    margin:12px;padding:12px;
+  }
+  .user{
+    display:flex;align-items:center;gap:10px;margin-bottom:8px;
+  }
+  .user img{
+    width:40px;height:40px;border-radius:50%;object-fit:cover;
+  }
+  .user .name{font-weight:600;font-size:15px;}
+  .user .time{font-size:12px;color:#65676b;}
+  .text{font-size:15px;margin:6px 0 10px;}
+  .photo{width:100%;border-radius:8px;object-fit:cover;max-height:360px;}
+  .actions{
+    display:flex;justify-content:space-between;color:#65676b;
+    font-size:14px;margin-top:8px;border-top:1px solid #ddd;padding-top:6px;
+  }
+  .actions span{cursor:pointer;}
+  .back{
+    position:fixed;top:10px;left:10px;color:#fff;font-weight:bold;
+    cursor:pointer;z-index:20;
+  }
 </style>
 </head>
 <body>
 
-<div class="header">
+<header>
   <div class="back" onclick="voltar()">←</div>
-  <div class="title">Facebook</div>
-  <div style="width:20px;"></div>
-</div>
+  <h1>Facebook</h1>
+  <div class="icons">
+    🔍 🔔
+  </div>
+</header>
 
 <div class="feed">
   <div class="post">
-    <div class="post-header">
-      <img src="https://randomuser.me/api/portraits/men/52.jpg" alt="">
-      <div class="info">
+    <div class="user">
+      <img src="https://randomuser.me/api/portraits/women/44.jpg">
+      <div>
+        <div class="name">Ana Souza</div>
+        <div class="time">há 2 h</div>
+      </div>
+    </div>
+    <div class="text">Fim de semana incrível com a família 💙</div>
+    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=500&q=60" class="photo">
+    <div class="actions"><span>👍 Curtir</span><span>💬 Comentar</span><span>↗️ Compartilhar</span></div>
+  </div>
+
+  <div class="post">
+    <div class="user">
+      <img src="https://randomuser.me/api/portraits/men/33.jpg">
+      <div>
         <div class="name">Carlos Mendes</div>
-        <div class="time">há 2 h · 🌎 Público</div>
+        <div class="time">há 5 h</div>
       </div>
     </div>
-    <p>Fim de semana chegando 😎 Bora praia?</p>
-    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80" alt="">
-    <div class="actions">
-      <div>👍 Curtir</div>
-      <div>💬 Comentar</div>
-      <div>↗️ Compartilhar</div>
-    </div>
+    <div class="text">Nova meta: treinar todos os dias! 💪</div>
+    <img src="https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=500&q=60" class="photo">
+    <div class="actions"><span>👍 Curtir</span><span>💬 Comentar</span><span>↗️ Compartilhar</span></div>
   </div>
 
   <div class="post">
-    <div class="post-header">
-      <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="">
-      <div class="info">
+    <div class="user">
+      <img src="https://randomuser.me/api/portraits/women/68.jpg">
+      <div>
         <div class="name">Mariana Costa</div>
-        <div class="time">há 4 h · 📱 Somente amigos</div>
+        <div class="time">há 1 d</div>
       </div>
     </div>
-    <p>Primeiro dia no novo trabalho! Que venham novos desafios 💪✨</p>
-    <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80" alt="">
-    <div class="actions">
-      <div>👍 Curtir</div>
-      <div>💬 Comentar</div>
-      <div>↗️ Compartilhar</div>
-    </div>
+    <div class="text">Adorei esse lugar, quero voltar logo! 😍🌅</div>
+    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=500&q=60" class="photo">
+    <div class="actions"><span>👍 Curtir</span><span>💬 Comentar</span><span>↗️ Compartilhar</span></div>
   </div>
 
   <div class="post">
-    <div class="post-header">
-      <img src="https://randomuser.me/api/portraits/men/68.jpg" alt="">
-      <div class="info">
-        <div class="name">Eduardo Lima</div>
-        <div class="time">Ontem às 21:17 · 🕺 Amigos</div>
+    <div class="user">
+      <img src="https://randomuser.me/api/portraits/men/12.jpg">
+      <div>
+        <div class="name">Lucas Pereira</div>
+        <div class="time">há 2 d</div>
       </div>
     </div>
-    <p>Show inesquecível com essa galera 🔥</p>
-    <img src="https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?auto=format&fit=crop&w=800&q=80" alt="">
-    <div class="actions">
-      <div>👍 Curtir</div>
-      <div>💬 Comentar</div>
-      <div>↗️ Compartilhar</div>
-    </div>
+    <div class="text">Feliz em anunciar meu novo projeto! 🚀</div>
+    <img src="https://images.unsplash.com/photo-1487017159836-4e23ece2e4cf?auto=format&fit=crop&w=500&q=60" class="photo">
+    <div class="actions"><span>👍 Curtir</span><span>💬 Comentar</span><span>↗️ Compartilhar</span></div>
   </div>
 
   <div class="post">
-    <div class="post-header">
-      <img src="https://randomuser.me/api/portraits/women/71.jpg" alt="">
-      <div class="info">
-        <div class="name">Cláudia Ribeiro</div>
-        <div class="time">há 1 dia · 📍 São Paulo</div>
+    <div class="user">
+      <img src="https://randomuser.me/api/portraits/men/51.jpg">
+      <div>
+        <div class="name">Pedro Santos</div>
+        <div class="time">há 3 d</div>
       </div>
     </div>
-    <p>Dia lindo pra um café ☕</p>
-    <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80" alt="">
-    <div class="actions">
-      <div>👍 Curtir</div>
-      <div>💬 Comentar</div>
-      <div>↗️ Compartilhar</div>
-    </div>
+    <div class="text">Saudades da turma! Quem topa marcar algo? 👀</div>
+    <img src="https://images.unsplash.com/photo-1558981001-10caa4a6bca8?auto=format&fit=crop&w=500&q=60" class="photo">
+    <div class="actions"><span>👍 Curtir</span><span>💬 Comentar</span><span>↗️ Compartilhar</span></div>
   </div>
 </div>
-
-<div class="footer">Feed simulado — interface inspirada no Facebook real.</div>
 
 <script>
 function voltar(){ location.href='dashboard.html'; }
