@@ -17,11 +17,7 @@
   font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-size: 15px;
-}
+body { background: var(--bg); color: var(--text); font-size: 15px; }
 header {
   background: var(--green);
   color: #fff;
@@ -31,13 +27,8 @@ header {
   position: sticky;
   top: 0;
 }
-.container {
-  max-width: 480px;
-  margin: auto;
-}
-.contact-list {
-  list-style: none;
-}
+.container { max-width: 480px; margin: auto; }
+.contact-list { list-style: none; }
 .contact {
   display: flex;
   align-items: center;
@@ -160,20 +151,84 @@ const contatos = [
   { nome:"Pai", msg:"Tudo bem por aí?", foto:"" },
   { nome:"Equipe de Trabalho", msg:"Reunião às 15h.", foto:"" },
   { nome:"João Victor", msg:"Cheguei!", foto:"" },
+  // novos contatos com fotos
+  { nome:"Primo Rafael", msg:"Vai no churrasco sábado?", foto:"https://randomuser.me/api/portraits/men/24.jpg" },
+  { nome:"Carla Mendes", msg:"Tô saindo do trabalho agora.", foto:"https://randomuser.me/api/portraits/women/29.jpg" },
+  { nome:"Lucas Ferreira", msg:"Cara, viu o jogo ontem?", foto:"https://randomuser.me/api/portraits/men/50.jpg" },
+  { nome:"Tio Roberto", msg:"Quando aparece aqui?", foto:"https://randomuser.me/api/portraits/men/61.jpg" },
+  { nome:"Sofia Martins", msg:"Te mandei o relatório no e-mail.", foto:"https://randomuser.me/api/portraits/women/44.jpg" },
 ];
 
-const chatPadrao = [
-  {t:"Oi, tudo bem?",tipo:"received"},
-  {t:"Tudo sim, e você?",tipo:"sent"},
-  {t:"Tô bem! Bora marcar?",tipo:"received"},
-  {t:"Bora sim 👍",tipo:"sent"}
-];
+const chats = {
+  "Daniel Rocha": [
+    {t:"Tá chegando?",tipo:"received"},
+    {t:"Tô sim, 5 min!",tipo:"sent"}
+  ],
+  "Fernanda Lopes": [
+    {t:"Pode me ligar rapidinho?",tipo:"received"},
+    {t:"Claro, te ligo agora",tipo:"sent"}
+  ],
+  "Marcos Lima": [
+    {t:"Oi, tudo bem?",tipo:"received"},
+    {t:"Tudo sim, e você?",tipo:"sent"},
+    {t:"Tô bem! Bora marcar?",tipo:"received"},
+    {t:"Bora sim 👍",tipo:"sent"}
+  ],
+  "Pedro Oliveira": [
+    {t:"Segue o link",tipo:"received"},
+    {t:"Valeu!",tipo:"sent"}
+  ],
+  "Tia Lúcia": [
+    {t:"Vem almoçar domingo?",tipo:"received"},
+    {t:"Claro, tia! Levo sobremesa 😄",tipo:"sent"}
+  ],
+  "Grupo Família ❤️": [
+    {t:"Bom diaaa ☀️",tipo:"sent"},
+    {t:"Bom dia! 🙌",tipo:"received"}
+  ],
+  "Mãe": [
+    {t:"Te amo 💕",tipo:"received"},
+    {t:"Também te amo mãe 😘",tipo:"sent"}
+  ],
+  "Pai": [
+    {t:"Tudo bem por aí?",tipo:"received"},
+    {t:"Tudo ótimo pai!",tipo:"sent"}
+  ],
+  "Equipe de Trabalho": [
+    {t:"Reunião às 15h.",tipo:"received"},
+    {t:"Estarei presente!",tipo:"sent"}
+  ],
+  "João Victor": [
+    {t:"Cheguei!",tipo:"received"},
+    {t:"Beleza, tô subindo!",tipo:"sent"}
+  ],
+  "Primo Rafael": [
+    {t:"Vai no churrasco sábado?",tipo:"received"},
+    {t:"Vou sim, já confirmei com o pessoal!",tipo:"sent"}
+  ],
+  "Carla Mendes": [
+    {t:"Tô saindo do trabalho agora.",tipo:"received"},
+    {t:"Boa, se cuida no trânsito!",tipo:"sent"}
+  ],
+  "Lucas Ferreira": [
+    {t:"Cara, viu o jogo ontem?",tipo:"received"},
+    {t:"Vi! Que virada absurda! ⚽🔥",tipo:"sent"}
+  ],
+  "Tio Roberto": [
+    {t:"Quando aparece aqui?",tipo:"received"},
+    {t:"Logo logo, saudades do churrasco!",tipo:"sent"}
+  ],
+  "Sofia Martins": [
+    {t:"Te mandei o relatório no e-mail.",tipo:"received"},
+    {t:"Perfeito, vou revisar ainda hoje!",tipo:"sent"}
+  ],
+};
 
 const list = document.getElementById("contacts");
 contatos.forEach((c,i)=>{
   const li=document.createElement("li");
   li.className="contact";
-  li.onclick=()=>abrirChat(i);
+  li.onclick=()=>abrirChat(c.nome);
   if(c.foto)
     li.innerHTML=`<img src="${c.foto}" alt=""><div class="info"><div class="name">${c.nome}</div><div class="last">${c.msg}</div></div>`;
   else
@@ -181,16 +236,16 @@ contatos.forEach((c,i)=>{
   list.appendChild(li);
 });
 
-function abrirChat(i){
+function abrirChat(nome){
   document.getElementById("contactsPage").style.display="none";
   document.getElementById("chatPage").style.display="block";
-  const c=contatos[i];
+  const c=contatos.find(x=>x.nome===nome);
   document.getElementById("chatName").textContent=c.nome;
-  const foto=c.foto || "";
-  document.getElementById("chatPhoto").src=foto || "https://cdn-icons-png.flaticon.com/512/847/847969.png";
+  document.getElementById("chatPhoto").src=c.foto || "https://cdn-icons-png.flaticon.com/512/847/847969.png";
   const area=document.getElementById("chatArea");
   area.innerHTML="";
-  chatPadrao.forEach(m=>{
+  const chat = chats[nome] || [{t:"Sem mensagens recentes.",tipo:"received"}];
+  chat.forEach(m=>{
     const div=document.createElement("div");
     div.className="msg "+m.tipo;
     div.innerHTML=`${m.t}<div class="time">${new Date().toLocaleTimeString().slice(0,5)}</div>`;
