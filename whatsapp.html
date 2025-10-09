@@ -5,209 +5,162 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>WhatsApp — Investigador AI</title>
 <style>
-:root {
-  --bg: #f0f2f5;
-  --accent: #25d366;
-  --text: #111;
-  --muted: #555;
-  font-family: "Segoe UI", "Helvetica Neue", Roboto, Arial, sans-serif;
+:root{
+  --whats-green:#075E54;
+  --whats-light:#DCF8C6;
+  --gray:#f0f0f0;
+  --text:#111;
+  font-family:"Helvetica Neue",Roboto,Arial;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 14px;
-  min-height: 100vh;
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#fff;color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.header{
+  width:100%;background:var(--whats-green);color:#fff;
+  padding:12px;text-align:center;font-weight:bold;font-size:18px;
+  position:sticky;top:0;z-index:10;
 }
-
-/* Header */
-.header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  max-width: 420px;
-  margin-bottom: 10px;
+.list{width:100%;max-width:480px;background:#fff}
+.item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 14px;border-bottom:1px solid #eee;cursor:pointer;
 }
-.back {
-  color: var(--muted);
-  cursor: pointer;
-  font-size: 18px;
+.item:hover{background:#f7f7f7}
+.avatar{
+  width:52px;height:52px;border-radius:50%;object-fit:cover;background:#ddd;
 }
-.title {
-  font-weight: 700;
-  font-size: 16px;
+.name{font-weight:600}
+.msg{font-size:14px;color:#555;margin-top:2px}
+.chat-screen{display:none;flex-direction:column;height:100vh;width:100%;max-width:480px;background:#ece5dd}
+.topbar{
+  background:var(--whats-green);color:#fff;display:flex;align-items:center;gap:10px;padding:10px;
 }
-
-/* Lista de contatos */
-.list {
-  width: 100%;
-  max-width: 420px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  overflow: hidden;
+.topbar img{width:42px;height:42px;border-radius:50%;object-fit:cover}
+.chat-box{flex:1;overflow:auto;padding:10px;display:flex;flex-direction:column;background:url('https://i.imgur.com/dY9v4E7.png') repeat center/cover}
+.bubble{
+  padding:8px 10px;border-radius:10px;max-width:80%;margin-bottom:6px;font-size:14px;
 }
-.item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
-  border-bottom: 1px solid #eee;
-  cursor: pointer;
-  transition: background 0.2s;
+.sent{align-self:flex-end;background:var(--whats-light)}
+.received{align-self:flex-start;background:#fff}
+.time{font-size:11px;text-align:right;color:#555;margin-top:2px}
+.footer{
+  display:flex;align-items:center;gap:8px;padding:8px;background:#fff;border-top:1px solid #ccc;
 }
-.item:hover { background: #f9f9f9; }
-.avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  object-fit: cover;
-  background: #ccc url('https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png') center/cover no-repeat;
+input{
+  flex:1;padding:10px;border-radius:20px;border:1px solid #ccc;outline:none;
 }
-.info { flex: 1; }
-.name { font-weight: 600; font-size: 15px; color: #111; }
-.preview { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-/* Chat (invisível até clicar em contato) */
-.chat {
-  display: none;
-  flex-direction: column;
-  background: #e5ddd5 url('https://i.imgur.com/fxC4MZy.png');
-  background-size: cover;
-  width: 100%;
-  max-width: 420px;
-  height: 80vh;
-  border-radius: 12px;
-  padding: 10px;
-  overflow-y: auto;
-}
-.chat-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: #075e54;
-  color: #fff;
-  padding: 8px 12px;
-  border-radius: 12px 12px 0 0;
-}
-.chat-avatar {
-  width: 40px; height: 40px; border-radius: 50%; object-fit: cover;
-  background: #ccc url('https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png') center/cover no-repeat;
-}
-.chat-name { font-weight: 600; }
-.msg {
-  display: inline-block;
-  max-width: 70%;
-  padding: 8px 12px;
-  margin: 6px 0;
-  border-radius: 10px;
-  font-size: 14px;
-  clear: both;
-}
-.sent {
-  background: #dcf8c6;
-  align-self: flex-end;
-  float: right;
-}
-.received {
-  background: #fff;
-  align-self: flex-start;
-  float: left;
-}
-.time {
-  display: block;
-  font-size: 11px;
-  color: #777;
-  text-align: right;
-  margin-top: 2px;
+button{
+  background:var(--whats-green);border:none;color:#fff;border-radius:50%;
+  width:42px;height:42px;font-size:18px;cursor:pointer;
 }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="back" onclick="voltar()">← Voltar</div>
-  <div class="title">WhatsApp</div>
-</div>
+<div class="header">WhatsApp</div>
 
-<!-- Lista de contatos -->
-<div class="list" id="list"></div>
+<div class="list" id="contactList"></div>
 
-<!-- Chat -->
-<div class="chat" id="chatBox">
-  <div class="chat-header">
-    <img id="chatAvatar" class="chat-avatar" src="">
-    <div class="chat-name" id="chatName"></div>
+<!-- Tela de Chat -->
+<div class="chat-screen" id="chatScreen">
+  <div class="topbar">
+    <div onclick="voltar()" style="cursor:pointer;font-size:20px;">←</div>
+    <img id="chatPhoto" src="" alt="">
+    <div id="chatName"></div>
   </div>
-  <div id="chatContent" style="padding:8px;"></div>
+  <div class="chat-box" id="chatBox"></div>
+  <div class="footer">
+    <input id="msgInput" placeholder="Digite uma mensagem"/>
+    <button onclick="enviar()">➤</button>
+  </div>
 </div>
 
 <script>
-function voltar(){
-  const chat = document.getElementById('chatBox');
-  const list = document.getElementById('list');
-  if(chat.style.display === 'flex'){
-    chat.style.display = 'none';
-    list.style.display = 'block';
-  } else {
-    location.href = 'dashboard.html';
-  }
-}
-
-const contatos = [
-  {nome:'Ana Silva', msg:'Oi, tudo bem?', foto:'https://randomuser.me/api/portraits/women/21.jpg'},
-  {nome:'Bruno Costa', msg:'Envia o relatório por favor.', foto:'https://randomuser.me/api/portraits/men/23.jpg'},
-  {nome:'Clara Mendes', msg:'❤️', foto:''},
-  {nome:'Daniel Rocha', msg:'Tá chegando?', foto:'https://randomuser.me/api/portraits/men/31.jpg'},
-  {nome:'Equipe de Trabalho', msg:'Reunião às 15h.', foto:''},
-  {nome:'Fernanda Lopes', msg:'Pode me ligar rapidinho?', foto:'https://randomuser.me/api/portraits/women/40.jpg'},
-  {nome:'Grupo Família ❤️', msg:'Bom diaaaa ☀️', foto:''},
-  {nome:'Marcos Lima', msg:'Já enviou os documentos?', foto:'https://randomuser.me/api/portraits/men/45.jpg'},
-  {nome:'Pai', msg:'Tudo bem por aí?', foto:''},
-  {nome:'Mãe', msg:'Te amo 💕', foto:''},
-  {nome:'Pedro Oliveira', msg:'Segue o link', foto:'https://randomuser.me/api/portraits/men/52.jpg'},
-  {nome:'João Victor', msg:'Cheguei!', foto:''},
-  {nome:'Tia Lúcia', msg:'Vem almoçar domingo?', foto:''},
-  {nome:'Carla Souza', msg:'Ok, combinado 👍', foto:'https://randomuser.me/api/portraits/women/55.jpg'},
-  {nome:'André Santos', msg:'Fechado então!', foto:'https://randomuser.me/api/portraits/men/62.jpg'}
+const contacts = [
+  {name:"Daniel Rocha", msg:"Tá chegando?", img:"https://randomuser.me/api/portraits/men/32.jpg"},
+  {name:"Equipe de Trabalho", msg:"Reunião às 15h.", img:"avatar.png"},
+  {name:"Fernanda Lopes", msg:"Pode me ligar rapidinho?", img:"https://randomuser.me/api/portraits/women/44.jpg"},
+  {name:"Grupo Família ❤️", msg:"Bom diaaa ☀️", img:"avatar.png"},
+  {name:"Marcos Lima", msg:"Já enviou os documentos?", img:"https://randomuser.me/api/portraits/men/12.jpg"},
+  {name:"Pai", msg:"Tudo bem por aí?", img:"avatar.png"},
+  {name:"Mãe", msg:"Te amo 💕", img:"avatar.png"},
+  {name:"Pedro Oliveira", msg:"Segue o link", img:"https://randomuser.me/api/portraits/men/40.jpg"},
+  {name:"João Victor", msg:"Cheguei!", img:"avatar.png"},
+  {name:"Tia Lúcia", msg:"Vem almoçar domingo?", img:"avatar.png"},
+  {name:"Lucas Mendes", msg:"Entra na call rapidinho?", img:"https://randomuser.me/api/portraits/men/5.jpg"},
+  {name:"Carla Souza", msg:"Depois te ligo ❤️", img:"https://randomuser.me/api/portraits/women/60.jpg"},
+  {name:"André Silva", msg:"Me avisa quando sair", img:"https://randomuser.me/api/portraits/men/10.jpg"},
+  {name:"Beatriz Ramos", msg:"Te mandei o arquivo", img:"https://randomuser.me/api/portraits/women/8.jpg"},
+  {name:"Rafaela Gomes", msg:"Amanhã tô livre!", img:"https://randomuser.me/api/portraits/women/25.jpg"},
+  {name:"Joana Martins", msg:"Não esquece do café ☕", img:"avatar.png"},
+  {name:"Tiago Fernandes", msg:"Chego em 5 min", img:"https://randomuser.me/api/portraits/men/19.jpg"},
+  {name:"Larissa Alves", msg:"Já tô indo ❤️", img:"https://randomuser.me/api/portraits/women/13.jpg"},
+  {name:"Ricardo Costa", msg:"Preciso falar com você", img:"https://randomuser.me/api/portraits/men/33.jpg"},
+  {name:"Camila Dias", msg:"Boa noite 🌙", img:"https://randomuser.me/api/portraits/women/34.jpg"}
 ];
 
-const list = document.getElementById('list');
-contatos.forEach(c=>{
-  const item=document.createElement('div');
-  item.className='item';
-  const foto=c.foto ? c.foto : 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png';
-  item.innerHTML=`<img class="avatar" src="${foto}" alt=""><div class="info"><div class="name">${c.nome}</div><div class="preview">${c.msg}</div></div>`;
-  item.onclick=()=>abrirChat(c);
-  list.appendChild(item);
+const list=document.getElementById("contactList");
+contacts.forEach((c,i)=>{
+  const div=document.createElement("div");
+  div.className="item";
+  div.onclick=()=>abrirChat(c);
+  div.innerHTML=`
+    <img src="${c.img}" class="avatar" onerror="this.src='avatar.png'">
+    <div><div class="name">${c.name}</div><div class="msg">${c.msg}</div></div>`;
+  list.appendChild(div);
 });
 
 function abrirChat(c){
-  document.getElementById('chatName').textContent=c.nome;
-  document.getElementById('chatAvatar').src=c.foto || 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png';
-  document.getElementById('list').style.display='none';
-  const chat=document.getElementById('chatBox');
-  chat.style.display='flex';
+  document.querySelector(".list").style.display="none";
+  const chat=document.getElementById("chatScreen");
+  chat.style.display="flex";
+  document.getElementById("chatName").textContent=c.name;
+  document.getElementById("chatPhoto").src=c.img;
+  gerarMensagens();
+}
 
-  const content=document.getElementById('chatContent');
-  content.innerHTML='';
-  const msgs=[
-    {t:'Oi, tudo bem?', tipo:'received'},
-    {t:'Tudo sim, e você?', tipo:'sent'},
-    {t:'Tô bem! Bora marcar?', tipo:'received'},
-    {t:'Bora sim 👍', tipo:'sent'}
-  ];
-  msgs.forEach(m=>{
-    const div=document.createElement('div');
-    div.className='msg '+m.tipo;
-    div.innerHTML=m.t+`<span class="time">${new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span>`;
-    content.appendChild(div);
-  });
+function voltar(){
+  document.getElementById("chatScreen").style.display="none";
+  document.querySelector(".list").style.display="block";
+}
+
+const mensagens = [
+  "Oi, tudo bem?","Tô bem, e você?","Bora marcar algo?",
+  "Tá chegando?","Chego em 10 min.","Pode me ligar rapidinho?",
+  "Te mandei o arquivo","Depois te conto","❤️","Haha ok 😂"
+];
+
+function gerarMensagens(){
+  const chat=document.getElementById("chatBox");
+  chat.innerHTML="";
+  for(let i=0;i<6;i++){
+    const div=document.createElement("div");
+    const tipo=i%2?"sent":"received";
+    div.className=`bubble ${tipo}`;
+    div.textContent=mensagens[Math.floor(Math.random()*mensagens.length)];
+    const hora=document.createElement("div");
+    hora.className="time";
+    hora.textContent=new Date().toLocaleTimeString().slice(0,5);
+    div.appendChild(hora);
+    chat.appendChild(div);
+  }
+  chat.scrollTop=chat.scrollHeight;
+}
+
+function enviar(){
+  const input=document.getElementById("msgInput");
+  const val=input.value.trim();
+  if(!val)return;
+  const chat=document.getElementById("chatBox");
+  const div=document.createElement("div");
+  div.className="bubble sent";
+  div.textContent=val;
+  const hora=document.createElement("div");
+  hora.className="time";
+  hora.textContent=new Date().toLocaleTimeString().slice(0,5);
+  div.appendChild(hora);
+  chat.appendChild(div);
+  chat.scrollTop=chat.scrollHeight;
+  input.value="";
 }
 </script>
 </body>
