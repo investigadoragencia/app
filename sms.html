@@ -1,110 +1,193 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Mensagens SMS — Investigador AI</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mensagens</title>
 <style>
-:root {
-  --bg:#000;
-  --accent:#e50914;
-  --muted:#9aa3ad;
-  --card:#0f0f10;
-  font-family:"Poppins",system-ui,Roboto,Arial;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{
-  background:var(--bg);
-  color:#fff;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding:14px;
-}
-.header{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  width:100%;
-  max-width:420px;
-  margin-bottom:10px;
-}
-.back{color:var(--muted);cursor:pointer;}
-.logo{margin:0 auto;width:64px;height:64px;object-fit:contain;}
-.container{
-  width:100%;
-  max-width:420px;
-  background:var(--card);
-  padding:12px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.05);
-  box-shadow:0 8px 24px rgba(229,9,20,0.06);
-}
-.msg{
-  border-bottom:1px solid rgba(255,255,255,0.05);
-  padding:10px 0;
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-}
-.sender{
-  font-weight:600;
-  font-size:14px;
-  color:#fff;
-}
-.text{
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.4;
-}
-.time{
-  color:#777;
-  font-size:11px;
-  text-align:right;
-}
+  :root {
+    --bg: #f7f7f7;
+    --text: #111;
+    --muted: #777;
+    --accent: #1976d2;
+    --border: #ddd;
+    font-family: "Roboto", system-ui, -apple-system, BlinkMacSystemFont;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* Cabeçalho */
+  header {
+    background: #fff;
+    padding: 18px 20px 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+  header h1 { font-size: 24px; margin-bottom: 4px; }
+  header p { color: var(--muted); font-size: 14px; }
+
+  /* Lista */
+  .list {
+    flex: 1;
+    overflow-y: auto;
+  }
+  .msg {
+    background: #fff;
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: #ccc;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold;
+    color: #fff;
+    font-size: 18px;
+    margin-right: 12px;
+  }
+  .msg:nth-child(odd) .avatar { background: #1976d2; }
+  .msg:nth-child(even) .avatar { background: #673ab7; }
+
+  .info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .info .name {
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 2px;
+  }
+  .info .preview {
+    color: var(--muted);
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 90%;
+  }
+  .time {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .badge {
+    background: var(--accent);
+    color: #fff;
+    font-size: 12px;
+    border-radius: 50%;
+    width: 20px; height: 20px;
+    display: flex; align-items: center; justify-content: center;
+    margin-left: 8px;
+  }
+
+  /* Rodapé */
+  footer {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    background: #fff;
+    border-top: 1px solid var(--border);
+  }
+  footer div {
+    text-align: center;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  footer div.active {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* Botão flutuante */
+  .fab {
+    position: fixed;
+    bottom: 70px;
+    right: 20px;
+    width: 54px;
+    height: 54px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  @media (max-width: 420px) {
+    header h1 { font-size: 22px; }
+    .msg { padding: 12px; }
+  }
 </style>
 </head>
 <body>
-  <div class="header">
-    <div class="back" onclick="voltar()">← Voltar</div>
-    <img src="logo.png" alt="Logo" class="logo" onerror="this.style.display='none'">
-  </div>
 
-  <div class="container" id="lista"></div>
-  
+<header>
+  <h1>Mensagens</h1>
+  <p>149 mensagens não lidas</p>
+</header>
+
+<div class="list" id="smsList"></div>
+
+<footer>
+  <div class="active">Conversas</div>
+  <div>Contatos</div>
+</footer>
+
+<div class="fab">💬</div>
+
 <script>
-function voltar(){ location.href='dashboard.html'; }
-
 const mensagens = [
-  {remetente:'Vivo', texto:'Seu pacote de internet foi renovado com sucesso. Validade: 30 dias.', hora:'Hoje, 09:14'},
-  {remetente:'Claro', texto:'Recarga de R$ 20,00 realizada. Bônus de 2GB de internet válidos por 7 dias.', hora:'Hoje, 08:42'},
-  {remetente:'Nubank', texto:'Compra aprovada no valor de R$ 89,90 em SUPERMERCADO BJS. Limite disponível: R$ 1.210,00', hora:'Ontem, 19:33'},
-  {remetente:'Google', texto:'Seu código de verificação é 835244. Não compartilhe este código com ninguém.', hora:'Ontem, 16:22'},
-  {remetente:'Caixa', texto:'Depósito de R$ 150,00 identificado em sua conta. Consulte o app Caixa Tem.', hora:'Ontem, 10:45'},
-  {remetente:'Mercado Livre', texto:'Seu pedido #MLB94723 foi despachado! Acompanhe o envio pelo app.', hora:'06/10/2025, 20:10'},
-  {remetente:'Facebook', texto:'Seu código de login é 552981. Ele expira em 10 minutos.', hora:'06/10/2025, 19:22'},
-  {remetente:'Instagram', texto:'Alguém tentou acessar sua conta. Se não foi você, redefina sua senha.', hora:'06/10/2025, 18:59'},
-  {remetente:'TIM', texto:'Novo pacote de voz disponível! 400 minutos + WhatsApp grátis. Responda SIM para ativar.', hora:'06/10/2025, 14:30'},
-  {remetente:'Banco do Brasil', texto:'Compra aprovada no valor de R$ 152,90 - Loja AMZ*. Código de segurança: 8319', hora:'05/10/2025, 21:07'},
-  {remetente:'Netflix', texto:'Sua fatura foi paga com sucesso. Boa diversão!', hora:'05/10/2025, 09:54'},
-  {remetente:'Pix', texto:'Você recebeu R$ 25,00 de “João Pereira”. Mensagem: almoço de hoje.', hora:'05/10/2025, 08:16'},
-  {remetente:'Correios', texto:'Objeto PX812639BR em rota de entrega. Acompanhe: correios.com.br', hora:'04/10/2025, 15:44'},
-  {remetente:'Amazon', texto:'Entrega agendada para amanhã (07/10). Item: Echo Dot 5ª geração.', hora:'04/10/2025, 09:32'},
-  {remetente:'Santander', texto:'Pagamento de fatura confirmado. Valor R$ 325,50.', hora:'03/10/2025, 12:15'},
-  {remetente:'PicPay', texto:'Você recebeu R$ 12,00 de cashback por compra no iFood.', hora:'03/10/2025, 10:50'},
-  {remetente:'Gmail', texto:'Novo acesso detectado em dispositivo Android - foi você?', hora:'03/10/2025, 08:10'},
-  {remetente:'IFood', texto:'Seu pedido #34521 saiu para entrega! 🍕', hora:'02/10/2025, 21:25'}
+  { nome: "6441", texto: "Tim: Jose, notamos que o pgto da sua fatura está em aberto no valor R$32,99.", hora: "17:28", qtd: 20 },
+  { nome: "100", texto: "TIM Recado: Você tem um novo recado. Ligue *100 para ouvir.", hora: "16:02", qtd: 18 },
+  { nome: "TIMHBO", texto: "Assine HBO Max pela TIM e aproveite lançamentos exclusivos!", hora: "15:01", qtd: 7 },
+  { nome: "TIMYouTube", texto: "Benefício não utilizado: 2 meses de YouTube Premium por conta da TIM!", hora: "13:42", qtd: 3 },
+  { nome: "MercadoPago", texto: "Compra de R$ 89,90 aprovada no cartão final 2032.", hora: "13:03", qtd: 2 },
+  { nome: "Nubank", texto: "Fatura fechada no valor de R$ 732,10 com vencimento em 15/10.", hora: "12:58", qtd: 1 },
+  { nome: "Google", texto: "Seu código de verificação é 593821.", hora: "12:02", qtd: 1 },
+  { nome: "Instagram", texto: "Use o código 392140 para confirmar seu login.", hora: "11:46", qtd: 1 },
+  { nome: "Claro", texto: "Você tem 2GB de bônus de internet disponíveis até 10/10.", hora: "11:30", qtd: 4 },
+  { nome: "Correios", texto: "Sua encomenda foi entregue com sucesso.", hora: "10:55", qtd: 1 },
+  { nome: "Banco do Brasil", texto: "Pagamento de R$ 412,50 confirmado.", hora: "10:12", qtd: 2 },
+  { nome: "Pix", texto: "Você recebeu R$ 250,00 via Pix de João M.", hora: "09:54", qtd: 1 },
+  { nome: "99App", texto: "Seu motorista chegou! Placa ABC1D23.", hora: "09:03", qtd: 1 },
+  { nome: "Netflix", texto: "Nova série disponível: 'Round 6 Temporada 2'.", hora: "08:46", qtd: 1 },
+  { nome: "Shopee", texto: "Pedido #43921 saiu para entrega.", hora: "07:35", qtd: 3 },
+  { nome: "Amazon", texto: "Seu pedido foi despachado!", hora: "06:44", qtd: 1 }
 ];
 
-const lista=document.getElementById('lista');
-mensagens.forEach(m=>{
-  const div=document.createElement('div');
-  div.className='msg';
-  div.innerHTML=`
-    <div class="sender">${m.remetente}</div>
-    <div class="text">${m.texto}</div>
-    <div class="time">${m.hora}</div>`;
-  lista.appendChild(div);
+const list = document.getElementById("smsList");
+mensagens.forEach(m => {
+  const div = document.createElement("div");
+  div.className = "msg";
+  div.innerHTML = `
+    <div class="avatar">${m.nome[0]}</div>
+    <div class="info">
+      <div class="name">${m.nome}</div>
+      <div class="preview">${m.texto}</div>
+    </div>
+    <div style="text-align:right;">
+      <div class="time">${m.hora}</div>
+      ${m.qtd ? `<div class="badge">${m.qtd}</div>` : ""}
+    </div>
+  `;
+  div.onclick = () => location.href = "sms_conversa.html";
+  list.appendChild(div);
 });
 </script>
 </body>
