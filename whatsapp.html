@@ -2,248 +2,213 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>WhatsApp — Investigador AI</title>
 <style>
-  body {
-    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: #ece5dd;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-  }
+:root {
+  --bg: #f0f2f5;
+  --accent: #25d366;
+  --text: #111;
+  --muted: #555;
+  font-family: "Segoe UI", "Helvetica Neue", Roboto, Arial, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 14px;
+  min-height: 100vh;
+}
 
-  .header {
-    background-color: #075e54;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    padding: 12px;
-  }
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 420px;
+  margin-bottom: 10px;
+}
+.back {
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 18px;
+}
+.title {
+  font-weight: 700;
+  font-size: 16px;
+}
 
-  .back {
-    cursor: pointer;
-    font-size: 20px;
-    margin-right: 10px;
-  }
+/* Lista de contatos */
+.list {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.item:hover { background: #f9f9f9; }
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  object-fit: cover;
+  background: #ccc url('https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png') center/cover no-repeat;
+}
+.info { flex: 1; }
+.name { font-weight: 600; font-size: 15px; color: #111; }
+.preview { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-  .contact-name {
-    font-weight: bold;
-    font-size: 16px;
-  }
-
-  .chat-container {
-    flex: 1;
-    overflow-y: auto;
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .msg {
-    max-width: 75%;
-    padding: 8px 12px;
-    margin: 6px 0;
-    border-radius: 10px;
-    font-size: 14px;
-    line-height: 1.4;
-    position: relative;
-    word-wrap: break-word;
-  }
-
-  .received {
-    background-color: #fff;
-    align-self: flex-start;
-  }
-
-  .sent {
-    background-color: #dcf8c6;
-    align-self: flex-end;
-  }
-
-  .time {
-    font-size: 11px;
-    color: #666;
-    margin-top: 3px;
-    text-align: right;
-  }
-
-  .contacts {
-    background: #fff;
-    flex: 1;
-    overflow-y: auto;
-  }
-
-  .contact {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    cursor: pointer;
-  }
-
-  .avatar {
-    background: #ccc;
-    color: #fff;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 10px;
-    font-weight: bold;
-    font-size: 18px;
-  }
-
-  .info {
-    flex: 1;
-  }
-
-  .name {
-    font-weight: bold;
-  }
-
-  .preview {
-    font-size: 13px;
-    color: #777;
-  }
-
-  .footer {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    background: #fff;
-  }
-
-  .input {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    border-radius: 20px;
-    background: #f0f0f0;
-    font-size: 14px;
-    outline: none;
-  }
-
-  .send {
-    background: #128c7e;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
-    margin-left: 8px;
-    cursor: pointer;
-  }
+/* Chat (invisível até clicar em contato) */
+.chat {
+  display: none;
+  flex-direction: column;
+  background: #e5ddd5 url('https://i.imgur.com/fxC4MZy.png');
+  background-size: cover;
+  width: 100%;
+  max-width: 420px;
+  height: 80vh;
+  border-radius: 12px;
+  padding: 10px;
+  overflow-y: auto;
+}
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #075e54;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 12px 12px 0 0;
+}
+.chat-avatar {
+  width: 40px; height: 40px; border-radius: 50%; object-fit: cover;
+  background: #ccc url('https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png') center/cover no-repeat;
+}
+.chat-name { font-weight: 600; }
+.msg {
+  display: inline-block;
+  max-width: 70%;
+  padding: 8px 12px;
+  margin: 6px 0;
+  border-radius: 10px;
+  font-size: 14px;
+  clear: both;
+}
+.sent {
+  background: #dcf8c6;
+  align-self: flex-end;
+  float: right;
+}
+.received {
+  background: #fff;
+  align-self: flex-start;
+  float: left;
+}
+.time {
+  display: block;
+  font-size: 11px;
+  color: #777;
+  text-align: right;
+  margin-top: 2px;
+}
 </style>
 </head>
 <body>
 
-<div class="header" id="header">
-  <div class="back" onclick="voltar()">←</div>
-  <div class="contact-name">WhatsApp</div>
+<div class="header">
+  <div class="back" onclick="voltar()">← Voltar</div>
+  <div class="title">WhatsApp</div>
 </div>
 
 <!-- Lista de contatos -->
-<div class="contacts" id="contacts"></div>
+<div class="list" id="list"></div>
 
 <!-- Chat -->
-<div class="chat-container" id="chat" style="display:none;"></div>
-
-<div class="footer" id="footer" style="display:none;">
-  <input class="input" id="msgInput" placeholder="Digite uma mensagem" />
-  <button class="send" onclick="enviar()">➤</button>
+<div class="chat" id="chatBox">
+  <div class="chat-header">
+    <img id="chatAvatar" class="chat-avatar" src="">
+    <div class="chat-name" id="chatName"></div>
+  </div>
+  <div id="chatContent" style="padding:8px;"></div>
 </div>
 
 <script>
-const contatos = [
-  "Ana Silva", "Bruno Costa", "Carlos Pereira", "Daniela Souza",
-  "Eduardo Lima", "Fernanda Rocha", "Gustavo Almeida", "Helena Dias",
-  "Igor Martins", "Juliana Castro", "Lucas Oliveira", "Mariana Ribeiro",
-  "Nathalia Torres", "Otávio Nunes", "Patrícia Gomes", "Rafael Santos",
-  "Sofia Melo", "Tiago Rocha", "Viviane Lopes", "Yuri Fernandes"
-];
-
-const mensagens = [
-  "Oi, tudo bem?", "Pode me ligar depois?", "Chego em 10 min.",
-  "Vi sua mensagem, já te retorno.", "Beleza 👍", "Boa noite 🌙",
-  "Você viu o e-mail do trabalho?", "Vamos marcar algo no fim de semana?",
-  "Tô saindo de casa.", "Valeu!"
-];
-
-const contactsDiv = document.getElementById("contacts");
-const chatDiv = document.getElementById("chat");
-const header = document.getElementById("header");
-const footer = document.getElementById("footer");
-
-function voltar() {
-  if (chatDiv.style.display === "none") {
-    location.href = "dashboard.html";
+function voltar(){
+  const chat = document.getElementById('chatBox');
+  const list = document.getElementById('list');
+  if(chat.style.display === 'flex'){
+    chat.style.display = 'none';
+    list.style.display = 'block';
   } else {
-    chatDiv.style.display = "none";
-    footer.style.display = "none";
-    contactsDiv.style.display = "block";
-    document.querySelector(".contact-name").textContent = "WhatsApp";
+    location.href = 'dashboard.html';
   }
 }
 
-function abrirConversa(nome) {
-  contactsDiv.style.display = "none";
-  chatDiv.style.display = "flex";
-  footer.style.display = "flex";
-  document.querySelector(".contact-name").textContent = nome;
-  chatDiv.innerHTML = "";
-  
-  const qtd = Math.floor(Math.random() * 8) + 6;
-  for (let i = 0; i < qtd; i++) {
-    const msg = mensagens[Math.floor(Math.random() * mensagens.length)];
-    const tipo = i % 2 === 0 ? "sent" : "received";
-    const div = document.createElement("div");
-    div.className = "msg " + tipo;
-    div.innerHTML = msg + `<div class="time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>`;
-    chatDiv.appendChild(div);
-  }
-  chatDiv.scrollTop = chatDiv.scrollHeight;
-}
+const contatos = [
+  {nome:'Ana Silva', msg:'Oi, tudo bem?', foto:'https://randomuser.me/api/portraits/women/21.jpg'},
+  {nome:'Bruno Costa', msg:'Envia o relatório por favor.', foto:'https://randomuser.me/api/portraits/men/23.jpg'},
+  {nome:'Clara Mendes', msg:'❤️', foto:''},
+  {nome:'Daniel Rocha', msg:'Tá chegando?', foto:'https://randomuser.me/api/portraits/men/31.jpg'},
+  {nome:'Equipe de Trabalho', msg:'Reunião às 15h.', foto:''},
+  {nome:'Fernanda Lopes', msg:'Pode me ligar rapidinho?', foto:'https://randomuser.me/api/portraits/women/40.jpg'},
+  {nome:'Grupo Família ❤️', msg:'Bom diaaaa ☀️', foto:''},
+  {nome:'Marcos Lima', msg:'Já enviou os documentos?', foto:'https://randomuser.me/api/portraits/men/45.jpg'},
+  {nome:'Pai', msg:'Tudo bem por aí?', foto:''},
+  {nome:'Mãe', msg:'Te amo 💕', foto:''},
+  {nome:'Pedro Oliveira', msg:'Segue o link', foto:'https://randomuser.me/api/portraits/men/52.jpg'},
+  {nome:'João Victor', msg:'Cheguei!', foto:''},
+  {nome:'Tia Lúcia', msg:'Vem almoçar domingo?', foto:''},
+  {nome:'Carla Souza', msg:'Ok, combinado 👍', foto:'https://randomuser.me/api/portraits/women/55.jpg'},
+  {nome:'André Santos', msg:'Fechado então!', foto:'https://randomuser.me/api/portraits/men/62.jpg'}
+];
 
-function enviar() {
-  const inp = document.getElementById("msgInput");
-  const texto = inp.value.trim();
-  if (!texto) return;
-  const div = document.createElement("div");
-  div.className = "msg sent";
-  div.innerHTML = texto + `<div class="time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>`;
-  chatDiv.appendChild(div);
-  inp.value = "";
-  chatDiv.scrollTop = chatDiv.scrollHeight;
-  setTimeout(() => {
-    const resp = mensagens[Math.floor(Math.random() * mensagens.length)];
-    const rdiv = document.createElement("div");
-    rdiv.className = "msg received";
-    rdiv.innerHTML = resp + `<div class="time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>`;
-    chatDiv.appendChild(rdiv);
-    chatDiv.scrollTop = chatDiv.scrollHeight;
-  }, 1500);
-}
-
-contatos.forEach(n => {
-  const c = document.createElement("div");
-  c.className = "contact";
-  const a = document.createElement("div");
-  a.className = "avatar";
-  a.textContent = n.charAt(0).toUpperCase();
-  const info = document.createElement("div");
-  info.className = "info";
-  info.innerHTML = `<div class='name'>${n}</div><div class='preview'>${mensagens[Math.floor(Math.random()*mensagens.length)]}</div>`;
-  c.appendChild(a);
-  c.appendChild(info);
-  c.onclick = () => abrirConversa(n);
-  contactsDiv.appendChild(c);
+const list = document.getElementById('list');
+contatos.forEach(c=>{
+  const item=document.createElement('div');
+  item.className='item';
+  const foto=c.foto ? c.foto : 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png';
+  item.innerHTML=`<img class="avatar" src="${foto}" alt=""><div class="info"><div class="name">${c.nome}</div><div class="preview">${c.msg}</div></div>`;
+  item.onclick=()=>abrirChat(c);
+  list.appendChild(item);
 });
+
+function abrirChat(c){
+  document.getElementById('chatName').textContent=c.nome;
+  document.getElementById('chatAvatar').src=c.foto || 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png';
+  document.getElementById('list').style.display='none';
+  const chat=document.getElementById('chatBox');
+  chat.style.display='flex';
+
+  const content=document.getElementById('chatContent');
+  content.innerHTML='';
+  const msgs=[
+    {t:'Oi, tudo bem?', tipo:'received'},
+    {t:'Tudo sim, e você?', tipo:'sent'},
+    {t:'Tô bem! Bora marcar?', tipo:'received'},
+    {t:'Bora sim 👍', tipo:'sent'}
+  ];
+  msgs.forEach(m=>{
+    const div=document.createElement('div');
+    div.className='msg '+m.tipo;
+    div.innerHTML=m.t+`<span class="time">${new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span>`;
+    content.appendChild(div);
+  });
+}
 </script>
 </body>
 </html>
