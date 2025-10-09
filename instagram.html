@@ -1,34 +1,98 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Instagram — App AI</title>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup — agenciainvestigador</title>
 <style>
-:root{--bg:#000;--accent:#e50914;--muted:#9aa3ad}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:#fff;font-family:"Poppins",system-ui,Roboto,Arial;display:flex;flex-direction:column;align-items:center;padding:14px}
-.header{display:flex;align-items:center;gap:8px;width:100%;max-width:420px;margin-bottom:10px}
-.back{color:var(--muted);cursor:pointer}
-.logo{margin:0 auto;width:64px;height:64px;object-fit:contain}
-.grid{width:100%;max-width:420px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.thumb{width:100%;padding-top:100%;position:relative;border-radius:8px;overflow:hidden;background:#111}
-.thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.small{color:var(--muted);text-align:center;margin-top:10px}
+:root {
+  --bg: #fff;
+  --accent: #262626;
+  --muted: #8a8f95;
+  --instagram-gradient: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+* { box-sizing: border-box; }
+body {
+  font-family: system-ui, Arial, sans-serif;
+  margin: 0;
+  background: var(--bg);
+  color: var(--accent);
+}
+.wrap { max-width: 980px; margin: 24px auto; padding: 24px; }
+.profile { display: flex; gap: 24px; align-items: center; }
+.avatar {
+  width: 140px; height: 140px; border-radius: 50%; overflow: hidden;
+  border: 3px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.1);
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.meta h1 { font-size: 20px; margin: 0; }
+.meta .handle { color: var(--muted); margin: 6px 0; }
+.stats { display: flex; gap: 18px; font-weight: 600; margin: 8px 0; }
+.stats div span { display: block; font-size: 14px; }
+.bio { color: var(--muted); line-height: 1.4; }
+.actions { margin-top: 12px; display: flex; gap: 8px; }
+.btn { padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; background: #fff; cursor: pointer; }
+.btn.primary { background: var(--instagram-gradient); color: #fff; border: 0; }
+.highlights { display: flex; gap: 12px; margin: 18px 0; flex-wrap: wrap; }
+.hl { width: 72px; text-align: center; }
+.hl .circle { width: 72px; height: 72px; border-radius: 50%; overflow: hidden; border: 2px solid #eee; }
+.hl img { width: 100%; height: 100%; object-fit: cover; }
+.hl p { font-size: 12px; color: var(--muted); margin: 6px 0 0; }
+.controls { display: flex; align-items: center; border-top: 1px solid #eee; padding-top: 12px; margin-top: 12px; }
+.grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; margin-top: 12px; }
+.post { position: relative; overflow: hidden; padding-top: 100%; background: #eee; }
+.post img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+@media (max-width:640px) {
+  .avatar { width: 96px; height: 96px; }
+  .grid { grid-template-columns: repeat(3, 1fr); }
+}
 </style>
 </head>
 <body>
-<div class="header"><div class="back" onclick="voltar()">← Voltar</div><img src="logo.png" class="logo" onerror="this.style.display='none'"></div>
+<div class="wrap">
+  <div class="profile">
+    <div class="avatar">
+      <img src="https://picsum.photos/400?random=10" alt="Foto de perfil">
+    </div>
+    <div class="meta">
+      <h1>Investigador</h1>
+      <div class="handle">@agenciainvestigador</div>
+      <div class="stats">
+        <div><span>136</span><small>publicações</small></div>
+        <div><span>4,5k</span><small>seguidores</small></div>
+        <div><span>120</span><small>seguindo</small></div>
+      </div>
+      <div class="bio">Proteja sua privacidade e descubra a verdade. A Agência Investigador atua com tecnologia, ética e total sigilo.</div>
+      <div class="actions">
+        <button class="btn primary">Seguir</button>
+        <button class="btn">Mensagem</button>
+      </div>
+    </div>
+  </div>
 
-<div class="grid" id="g"></div>
-<div class="small">Feed simulado — imagens fictícias.</div>
+  <div class="highlights">
+    <div class="hl"><div class="circle"><img src="https://picsum.photos/200?random=1" alt=""></div><p>Casos</p></div>
+    <div class="hl"><div class="circle"><img src="https://picsum.photos/200?random=2" alt=""></div><p>Serviços</p></div>
+    <div class="hl"><div class="circle"><img src="https://picsum.photos/200?random=3" alt=""></div><p>Equipe</p></div>
+    <div class="hl"><div class="circle"><img src="https://picsum.photos/200?random=4" alt=""></div><p>Provas</p></div>
+  </div>
 
-<script>
-function voltar(){ location.href='dashboard.html'; }
-const g=document.getElementById('g');
-for(let i=1;i<=9;i++){
-  const d=document.createElement('div'); d.className='thumb';
-  const img=document.createElement('img'); img.src='https://picsum.photos/seed/ig'+i+'/300/300';
-  d.appendChild(img); g.appendChild(d);
-  d.addEventListener('click', ()=> window.open(img.src,'_blank'));
-}
-</script>
+  <div class="controls">
+    <div style="font-weight:600">Publicações</div>
+    <div style="margin-left:auto;color:var(--muted)">Ordenar: Mais recentes</div>
+  </div>
+
+  <div class="grid">
+    <div class="post"><img src="https://picsum.photos/600?random=11" alt=""></div>
+    <div class="post"><img src="https://picsum.photos/600?random=12" alt=""></div>
+    <div class="post"><img src="https://picsum.photos/600?random=13" alt=""></div>
+    <div class="post"><img src="https://picsum.photos/600?random=14" alt=""></div>
+    <div class="post"><img src="https://picsum.photos/600?random=15" alt=""></div>
+    <div class="post"><img src="https://picsum.photos/600?random=16" alt=""></div>
+    <div class="post"><img src="https://picsum.photos/600?random=17" alt=""></div>
+    <div class="post"><img src="https://picsum.photos/600?random=18" alt=""></div>
+    <div class="post"><img src="https://picsum.photos/600?random=19" alt=""></div>
+  </div>
+</div>
 </body>
 </html>
